@@ -262,6 +262,8 @@ MonoBehaviour:
   MoveListItemPrefab: {fileID: 3767915151922558283, guid: 687f05266aa6e4f43bfee3c6f8478b25,
     type: 3}
   UICanvas: {fileID: 1802887257}
+  HealthCoolantUI: {fileID: 2018220380503453913, guid: c32e1ce77fc6946de8d548bd6ed07dd4,
+    type: 3}
 --- !u!4 &1193804154
 Transform:
   m_ObjectHideFlags: 0
