@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Hardware : Monobehaviour, IRobotConfig
+public class Hardware : MonoBehaviour, IRobotConfig
 {
     private PlayerStats statBoosts;
     private List<Ability> abilities;
@@ -13,7 +13,7 @@ public class Hardware : Monobehaviour, IRobotConfig
         return abilities;
     }
 
-    public void getStatBoosts()
+    public PlayerStats getStatBoosts()
     {
         return statBoosts;
     }

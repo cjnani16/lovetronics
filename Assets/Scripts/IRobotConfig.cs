@@ -6,5 +6,5 @@ public interface IRobotConfig
 {
     List<Ability> getAbilities();
 
-    PlayerStats getStats();
+    PlayerStats getStatBoosts();
 }

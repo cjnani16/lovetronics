@@ -51,3 +51,6 @@ crashlytics-build.properties
 # Art
 Assets/Art/
 Assets/Art.meta
+
+# Plugins
+Assets/Plugins/
