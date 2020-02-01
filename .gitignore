@@ -47,3 +47,7 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+
+# Art
+Assets/Art/
+Assets/Art.meta
