@@ -50,12 +50,14 @@ public class BattlerState
             b.decrement();
 
             //take damage/heal from effects
-            if (b.type == BuffDebuffType.Health) {
+            if (b.type == BuffDebuffType.Health)
+            {
                 health += b.healBleedAmt;
             }
 
             //take coolant damage/heal from effects
-            if (b.type == BuffDebuffType.Coolant) {
+            if (b.type == BuffDebuffType.Coolant)
+            {
                 coolant += b.healBleedAmt;
             }
 
@@ -99,7 +101,8 @@ class MoveListener
         }
 
         //place buffs and debuffs onto the target
-        foreach(BuffDebuff b in move.enemyAppliedEffects) {
+        foreach (BuffDebuff b in move.enemyAppliedEffects)
+        {
             target.buffsAndDebuffs.Add(b);
         }
     }
@@ -151,7 +154,6 @@ public class BattleManager : MonoBehaviour
         //player b/ds
         PlayerStats totalChanges = new PlayerStats(0, 0, 0, 0, 0);
         float healthDeb=0, coolDeb=0;
-
         for (int i = 0; i < PlayerState.buffsAndDebuffs.Count; i++)
         {
             totalChanges += PlayerState.buffsAndDebuffs[i].GetStatChanges();
@@ -448,9 +450,12 @@ public class BattleManager : MonoBehaviour
         }
 
         BattlerState sel = GameManager.manager.getNextOpponent();
-        if (sel==null) {
+        if (sel == null)
+        {
             AssembleAnEnemy();
-        } else {
+        }
+        else
+        {
             this.EnemyState = sel;
         }
 
@@ -462,17 +467,17 @@ public class BattleManager : MonoBehaviour
         PlayerBotImage.GetComponent<RectTransform>().sizeDelta = PlayerBotImage.GetComponent<Image>().sprite.rect.size;
         float moveDownAmt = prevHeight - PlayerBotImage.GetComponent<RectTransform>().sizeDelta.y;
 
-        PlayerBotImage.transform.parent.position -= new Vector3(0, moveDownAmt / 2);
+        PlayerBotImage.transform.parent.position -= new Vector3(0, (moveDownAmt / 2) * 0.4f);
 
         // for Enemy: set appropriate sprite, keep all sprites on equal ground height
         defaultSprite = EnemyBotImage.GetComponent<Image>().sprite;
         loadedSprite = GameManager.manager.getSprite(EnemyState);
-        EnemyBotImage.GetComponent<Image>().sprite = (loadedSprite == null)? defaultSprite : loadedSprite;
+        EnemyBotImage.GetComponent<Image>().sprite = (loadedSprite == null) ? defaultSprite : loadedSprite;
         prevHeight = EnemyBotImage.GetComponent<RectTransform>().sizeDelta.y;
         EnemyBotImage.GetComponent<RectTransform>().sizeDelta = EnemyBotImage.GetComponent<Image>().sprite.rect.size;
-        moveDownAmt = prevHeight-EnemyBotImage.GetComponent<RectTransform>().sizeDelta.y;
+        moveDownAmt = prevHeight - EnemyBotImage.GetComponent<RectTransform>().sizeDelta.y;
 
-        EnemyBotImage.transform.parent.position -= new Vector3(0,moveDownAmt/2);
+        EnemyBotImage.transform.parent.position -= new Vector3(0, (moveDownAmt / 2) * 0.4f);
 
         CreateBuffDebuffs();
         InitHealthCoolantUI();
