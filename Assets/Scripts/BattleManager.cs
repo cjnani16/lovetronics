@@ -4,24 +4,48 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-class BattlerState {
+public class BattlerState {
     public float health, coolant;
+
+    //stats BEFORE buffs
     public PlayerStats stats;
+
+    public List<BuffDebuff> buffsAndDebuffs;
     public BattlerState(PlayerStats s) {
+        buffsAndDebuffs = new List<BuffDebuff>();
         stats = s;
         health = stats.getMaxHealth();
         coolant = stats.getMaxCoolant();
     }
 
+    //get stats AFTER buffs
+    public PlayerStats getAlteredStats() {
+        PlayerStats altered = stats;
+        foreach (BuffDebuff b in buffsAndDebuffs) {
+            altered += b.GetStatChanges();
+        }
+        return altered;
+    }
+
+    bool isExpired (BuffDebuff b) {
+        return b.isExpired();
+    }
+
     public void ApplyTurnEndEffects() {
         coolant += stats.getCoolantRegen();
         if (coolant>stats.getMaxCoolant()) coolant=stats.getMaxCoolant();
+
+        //decrement timers on buffs/debuffs and remove expired ones
+        foreach(BuffDebuff b in buffsAndDebuffs) {
+            b.decrement();
+        }
+        buffsAndDebuffs.RemoveAll(isExpired);
     }
 }
 
 class MoveListener {
-    BattleMove move; 
-    public MoveListener(BattleMove m) {
+    Ability move; 
+    public MoveListener(Ability m) {
         move = m;
     }
 
@@ -32,10 +56,15 @@ class MoveListener {
         target.health -= move.damageCalc(ref user, ref target);
         if (target.health<0) target.health=0;
         if (user.coolant<0) user.coolant=0;
+
+        //place buffs and debuffs onto the user
+        foreach(BuffDebuff b in move.appliedEffects) {
+            user.buffsAndDebuffs.Add(b);
+        }
     }
 }
 
-struct BattleMove {
+/*struct BattleMove {
     public string name, description;
     public float power, cost;
     public Color color;
@@ -47,15 +76,13 @@ struct BattleMove {
         this.color = Random.ColorHSV();
     }
 
-    public float damageCalc(ref BattlerState user, ref BattlerState target) {
-        return Mathf.Round(this.power*user.stats.getAttack()*(100f/(target.stats.getDefense()+100f)));
-    }
-}
+    
+}*/
 
 
 public class BattleManager : MonoBehaviour
 {
-    [SerializeField] public GameObject MoveListItemPrefab, UICanvas, HealthCoolantUI, PassTurnPrefab, PlayerBotImage, EnemyBotImage;
+    [SerializeField] public GameObject MoveListItemPrefab, UICanvas, HealthCoolantUI, PassTurnPrefab, PlayerBotImage, EnemyBotImage, BuffDebuffIndicatorPrefab;
 
     GameObject currentHCUI;
     BattleState currentBattleState;
@@ -64,9 +91,34 @@ public class BattleManager : MonoBehaviour
 
     //runtinme populated
     List<GameObject> moveListPanels;
-    GameObject enemyChosenMove;
+    GameObject enemyChosenMove, playerBuffsAndDebuffsText, enemyBuffsAndDebuffsText;
     float [] panelYPositions;
     float riseSpeed=400;
+
+    void CreateBuffDebuffs () {
+        playerBuffsAndDebuffsText = GameObject.Instantiate(BuffDebuffIndicatorPrefab, new Vector3(-160,-409), Quaternion.identity);
+        playerBuffsAndDebuffsText.transform.SetParent(UICanvas.transform, false);
+        playerBuffsAndDebuffsText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
+
+        enemyBuffsAndDebuffsText = GameObject.Instantiate(BuffDebuffIndicatorPrefab, new Vector3(165,-409), Quaternion.identity);
+        enemyBuffsAndDebuffsText.transform.SetParent(UICanvas.transform, false);
+        enemyBuffsAndDebuffsText.GetComponent<Text>().alignment = TextAnchor.MiddleRight;
+    }
+    void DrawBuffDebuffs() {
+        //player b/ds
+        playerBuffsAndDebuffsText.GetComponent<Text>().text = "";
+        for (int i=0; i<PlayerState.buffsAndDebuffs.Count; i++) {
+            string s = PlayerState.buffsAndDebuffs[i].stringify();
+            playerBuffsAndDebuffsText.GetComponent<Text>().text += s;
+        }
+
+        //enemy b/ds
+        enemyBuffsAndDebuffsText.GetComponent<Text>().text = "";
+        for (int i=0; i<EnemyState.buffsAndDebuffs.Count; i++) {
+            string s = EnemyState.buffsAndDebuffs[i].stringify();
+            enemyBuffsAndDebuffsText.GetComponent<Text>().text += s;
+        }
+    }
 
     void InitHealthCoolantUI() {
         currentHCUI = Instantiate(HealthCoolantUI, Vector3.zero, Quaternion.identity);
@@ -97,31 +149,40 @@ public class BattleManager : MonoBehaviour
 
     }
     
-    List<BattleMove> DrawMoves() {
-        List<BattleMove> generatedMoves = new List<BattleMove>();
+    List<Ability> DrawMoves() {
+        //TODO: get these from hardware
+        List<Ability> generatedMoves = new List<Ability>();
 
         //add a couple random placeholder moves for now
         for (int i = 0; i <3; i++) {
-            generatedMoves.Add(new BattleMove("Random Move"+i, "random description "+i, Random.Range(0.0f,1.0f), Random.Range(4,50)));
+            Ability thisMove = new Ability("Random Move"+i, "random description "+i, Random.Range(0.0f,1.0f), Random.Range(4,50));
+            generatedMoves.Add(thisMove);
+            if (Random.Range(0,2) == 1) {
+                thisMove.AddEffect("Random Attack Boost", new PlayerStats(10,0,0,0,0), 2);
+            }
         }
 
         return generatedMoves;
     }
 
-    List<BattleMove> EnemyDrawMoves() {
-        List<BattleMove> generatedMoves = new List<BattleMove>();
+    List<Ability> EnemyDrawMoves() {
+        //TODO: gt these from hardware
+        List<Ability> generatedMoves = new List<Ability>();
 
         //add a couple random placeholder moves for now
         for (int i = 0; i <3; i++) {
-            generatedMoves.Add(new BattleMove("Random Enemy Move"+i, "really mess you tf up!!! "+i, Random.Range(0.0f,1.0f), Random.Range(4,50)));
+            Ability thisMove = new Ability("Random Enemy Move"+i, "really mess you tf up!!! "+i, Random.Range(0.0f,1.0f), Random.Range(4,50));
+            thisMove.AddEffect("Random Defense Boost", new PlayerStats(0,10,0,0,0), 2);
+            generatedMoves.Add(thisMove);
+
         }
 
         return generatedMoves;
     }
 
     void EnemyTurnAnnounce() {
-        List<BattleMove> availableMoves = EnemyDrawMoves();
-        BattleMove chosenMove = availableMoves[Random.Range(0,availableMoves.Count)];
+        List<Ability> availableMoves = EnemyDrawMoves();
+        Ability chosenMove = availableMoves[Random.Range(0,availableMoves.Count)];
 
         enemyChosenMove = GameObject.Instantiate(MoveListItemPrefab, new Vector3(1000, -1070, 0), Quaternion.identity);
         enemyChosenMove.transform.SetParent(UICanvas.transform,false);
@@ -153,7 +214,7 @@ public class BattleManager : MonoBehaviour
     }
 
     void PresentMoves() {
-        List<BattleMove> availableMoves = DrawMoves();
+        List<Ability> availableMoves = DrawMoves();
 
         panelYPositions = new float [availableMoves.Count+1];
 
@@ -176,9 +237,14 @@ public class BattleManager : MonoBehaviour
 
             //Set fields
             thisMove.transform.Find("NameText").GetComponent<Text>().text = availableMoves[i].name;
-            thisMove.transform.Find("DescriptionText").GetComponent<Text>().text = availableMoves[i].description;
+            thisMove.transform.Find("DescriptionText").GetComponent<Text>().text = availableMoves[i].description + "\n";
             thisMove.transform.Find("PowerText").GetComponent<Text>().text = ""+availableMoves[i].damageCalc(ref PlayerState, ref EnemyState);
             thisMove.transform.Find("CoolantText").GetComponent<Text>().text = "("+availableMoves[i].cost+")";
+
+            //Add efffects to description
+            foreach (BuffDebuff b in availableMoves[i].appliedEffects) {
+                thisMove.transform.Find("DescriptionText").GetComponent<Text>().text += b.name;
+            }
 
             MoveListener m = new MoveListener(availableMoves[i]);
 
@@ -236,7 +302,8 @@ public class BattleManager : MonoBehaviour
         //init health and coolant
         PlayerState = new BattlerState(GameManager.manager.getBaseStats());
         EnemyState = new BattlerState(new PlayerStats(66,66,66,66,66));
-        Debug.Log("Player attack is :"+PlayerState.stats.getAttack());
+
+        CreateBuffDebuffs();
         InitHealthCoolantUI();
 
         moveListPanels = new List<GameObject>();
@@ -247,6 +314,7 @@ public class BattleManager : MonoBehaviour
     void Update()
     {
         UpdateHealthCoolantUI();
+        DrawBuffDebuffs();
 
         switch (currentBattleState) {
             //battle start animation?
@@ -257,7 +325,7 @@ public class BattleManager : MonoBehaviour
             //pause for animation
             case BattleState.AttackAnimation: {
                 t+=Time.deltaTime;
-                if (t>3) {
+                if (t>2) {
                     t=0;
                     currentBattleState = BattleState.EnemyAttackAnimation;
                     Debug.Log("Start enemy attack animation (3s)");
@@ -270,7 +338,7 @@ public class BattleManager : MonoBehaviour
             case BattleState.EnemyAttackAnimation: {
                 t+=Time.deltaTime;
                 EnemyCardUpdate();
-                if (t>3) {
+                if (t>2) {
                     t=0;
                     currentBattleState = BattleState.ChooseMove;
                     

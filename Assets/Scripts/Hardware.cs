@@ -14,8 +14,7 @@ public class Hardware
     public Category category;
 
     public PlayerStats statBoosts;
-    public Ability ability;
-
+    public List<Ability> abilities;
 
     public Hardware(int i, string n, Category c, PlayerStats s)
     {
@@ -25,9 +24,9 @@ public class Hardware
         statBoosts = s;
     }
 
-    public Ability getAbility()
+    public List<Ability> getAbilities()
     {
-        return ability;
+        return abilities;
     }
 
     public PlayerStats getStatBoosts()
