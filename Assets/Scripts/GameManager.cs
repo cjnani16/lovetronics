@@ -26,10 +26,12 @@ public class GameManager : MonoBehaviour
         Hardware chassis1 = new Hardware("Basic", Hardware.Category.CHASSIS, new PlayerStats(5, 5, -15, -10, 10));
         Hardware chassis2 = new Hardware("Aggressive", Hardware.Category.CHASSIS, new PlayerStats(10, 0, -10, 10, 0));
         Hardware chassis3 = new Hardware("Useless", Hardware.Category.CHASSIS, new PlayerStats(0, 0, 0, 0, 0));
+        Hardware chassis4 = new Hardware("Useless2", Hardware.Category.CHASSIS, new PlayerStats(1, 0, 0, 0, 0));
+        Hardware chassis5 = new Hardware("Useless3", Hardware.Category.CHASSIS, new PlayerStats(0, 1, 0, 0, 0));
 
         Hardware loco1 = new Hardware("Wheel", Hardware.Category.LOCOMOTION, new PlayerStats(0, 10, 10, 10, 5));
         Hardware equip1 = new Hardware("Sword", Hardware.Category.EQUIPMENT, new PlayerStats(30, -10, 0, 0, 0));
-        hardware = new List<Hardware> { chassis1, chassis2, chassis3, loco1, equip1 };
+        hardware = new List<Hardware> { chassis1, chassis2, chassis3, chassis4, chassis5, loco1, equip1 };
         selectedChassis = chassis2;
         selectedLocomotion = loco1;
         selectedEquipment = equip1;
