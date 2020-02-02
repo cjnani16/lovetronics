@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 class BattlerState {
     public float health, coolant;
@@ -10,6 +11,11 @@ class BattlerState {
         stats = s;
         health = stats.getMaxHealth();
         coolant = stats.getMaxCoolant();
+    }
+
+    public void ApplyTurnEndEffects() {
+        coolant += stats.getCoolantRegen();
+        if (coolant>stats.getMaxCoolant()) coolant=stats.getMaxCoolant();
     }
 }
 
@@ -24,6 +30,8 @@ class MoveListener {
         //do things with target and user
         user.coolant -= move.cost;
         target.health -= move.power;
+        if (target.health<0) target.health=0;
+        if (user.coolant<0) user.coolant=0;
     }
 }
 
@@ -43,15 +51,16 @@ struct BattleMove {
 
 public class BattleManager : MonoBehaviour
 {
-    [SerializeField] public GameObject MoveListItemPrefab, UICanvas, HealthCoolantUI;
+    [SerializeField] public GameObject MoveListItemPrefab, UICanvas, HealthCoolantUI, PassTurnPrefab, PlayerBotImage, EnemyBotImage;
 
     GameObject currentHCUI;
     BattleState currentBattleState;
     BattlerState PlayerState, EnemyState;
-    enum BattleState { Start, ChooseMove, AttackAnimation, EnemyAttackAnimation, End };
+    enum BattleState { Start, ChooseMove, AttackAnimation, EnemyAttackAnimation, Win, Loss };
 
     //runtinme populated
     List<GameObject> moveListPanels;
+    GameObject enemyChosenMove;
     float [] panelYPositions;
     float riseSpeed=400;
 
@@ -95,17 +104,71 @@ public class BattleManager : MonoBehaviour
         return generatedMoves;
     }
 
+    List<BattleMove> EnemyDrawMoves() {
+        List<BattleMove> generatedMoves = new List<BattleMove>();
+
+        //add a couple random placeholder moves for now
+        for (int i = 0; i <3; i++) {
+            generatedMoves.Add(new BattleMove("Random Enemy Move"+i, "really mess you tf up!!! "+i, Random.Range(10,50), Random.Range(4,50)));
+        }
+
+        return generatedMoves;
+    }
+
+    void EnemyTurnAnnounce() {
+        List<BattleMove> availableMoves = EnemyDrawMoves();
+        BattleMove chosenMove = availableMoves[Random.Range(0,availableMoves.Count)];
+
+        enemyChosenMove = GameObject.Instantiate(MoveListItemPrefab, new Vector3(1000, -1070, 0), Quaternion.identity);
+        enemyChosenMove.transform.SetParent(UICanvas.transform,false);
+        enemyChosenMove.GetComponent<Image>().color = new Color(1,0.2f,0.2f,1);
+
+        //Set fields
+        enemyChosenMove.transform.Find("NameText").GetComponent<Text>().text = chosenMove.name;
+        enemyChosenMove.transform.Find("DescriptionText").GetComponent<Text>().text = chosenMove.description;
+        enemyChosenMove.transform.Find("PowerText").GetComponent<Text>().text = ""+chosenMove.power;
+        enemyChosenMove.transform.Find("CoolantText").GetComponent<Text>().text = "("+chosenMove.cost+")";
+
+        MoveListener m = new MoveListener(chosenMove);
+        m.Activate(ref EnemyState, ref PlayerState);
+        
+        PlayerBotImage.GetComponent<Animator>().Play("PlayerHurtAnimation");
+        EnemyBotImage.GetComponent<Animator>().Play("EnemyAttackAnimation");
+    }
+
+    void EnemyCardUpdate() {
+        if (enemyChosenMove.transform.localPosition.x>0)
+            enemyChosenMove.transform.localPosition -= new Vector3(2000*Time.deltaTime,0);
+        else {
+            enemyChosenMove.transform.localPosition = new Vector3(0, enemyChosenMove.transform.localPosition.y);
+        }
+    }
+
+    void EnemyCardDestroy() {
+        GameObject.Destroy(enemyChosenMove);
+    }
+
     void PresentMoves() {
         List<BattleMove> availableMoves = DrawMoves();
 
-        panelYPositions = new float [availableMoves.Count];
+        panelYPositions = new float [availableMoves.Count+1];
+
+        //add an option to skip ur turn
+        GameObject skipMove = GameObject.Instantiate(PassTurnPrefab, new Vector3(0, -1370, 0), Quaternion.identity);
+        skipMove.transform.SetParent(UICanvas.transform,false);
+        skipMove.GetComponent<Image>().color = Color.yellow;
+        //Set fields
+        skipMove.transform.Find("CoolantText").GetComponent<Text>().text = "(+"+PlayerState.stats.getCoolantRegen()+")";
+        skipMove.GetComponent<Button>().onClick.AddListener(() => { OnChoseAttack(true);});
+
+        moveListPanels.Add(skipMove);
+        panelYPositions[0] = 80;
 
         //put a button on screen for each move
         for (int i = 0; i<availableMoves.Count; i++) {
             GameObject thisMove = GameObject.Instantiate(MoveListItemPrefab, new Vector3(0, -1370, 0), Quaternion.identity);
             thisMove.transform.SetParent(UICanvas.transform,false);
-            Image img = thisMove.GetComponent<Image>();
-            img.color = Color.green;
+            thisMove.GetComponent<Image>().color = Color.green;
 
             //Set fields
             thisMove.transform.Find("NameText").GetComponent<Text>().text = availableMoves[i].name;
@@ -117,18 +180,23 @@ public class BattleManager : MonoBehaviour
 
             //mana check
             if (PlayerState.coolant >= availableMoves[i].cost) {
-                thisMove.GetComponent<Button>().onClick.AddListener(() => {m.Activate( ref this.PlayerState, ref this.EnemyState); OnChoseAttack();});
+                thisMove.GetComponent<Button>().onClick.AddListener(() => {m.Activate( ref this.PlayerState, ref this.EnemyState); OnChoseAttack(false);});
             } else {
-                img.color = Color.gray;
+                thisMove.GetComponent<Image>().color = Color.gray;
             }
 
             moveListPanels.Add(thisMove);
-            panelYPositions[i] = 150+300*i;
+            panelYPositions[i+1] = 320+300*(i);
         }
-
     }
 
-    void OnChoseAttack() {
+    void OnChoseAttack(bool passed) {
+        if (!passed) {
+            //animate
+            PlayerBotImage.GetComponent<Animator>().Play("PlayerAttackAnimation");
+            EnemyBotImage.GetComponent<Animator>().Play("EnemyHurtAnimation");
+        }
+
         this.currentBattleState = BattleState.AttackAnimation;
         foreach (GameObject g in moveListPanels) {
             GameObject.Destroy(g);
@@ -146,6 +214,14 @@ public class BattleManager : MonoBehaviour
             }
         }
         riseSpeed+=20;
+    }
+
+    void CheckWinLossState() {
+        if (PlayerState.health==0) {
+            currentBattleState = BattleState.Loss;
+        } else if (EnemyState.health==0) {
+            currentBattleState = BattleState.Win;
+        }
     }
     
     // Start is called before the first frame update
@@ -180,19 +256,28 @@ public class BattleManager : MonoBehaviour
                     t=0;
                     currentBattleState = BattleState.EnemyAttackAnimation;
                     Debug.Log("Start enemy attack animation (3s)");
+                    CheckWinLossState();
+                    if (currentBattleState!=BattleState.Win) EnemyTurnAnnounce();
                 }
             } break;
 
             //pause for animation
             case BattleState.EnemyAttackAnimation: {
                 t+=Time.deltaTime;
+                EnemyCardUpdate();
                 if (t>3) {
                     t=0;
                     currentBattleState = BattleState.ChooseMove;
-                    PresentMoves();
+                    
+                    EnemyCardDestroy();
+                    CheckWinLossState();
+                    if (currentBattleState!=BattleState.Loss) PresentMoves();
                     riseSpeed=400;
                 }
             } break;
+
+            case BattleState.Loss: SceneManager.LoadScene("LoseBattleScene"); break;
+            case BattleState.Win: SceneManager.LoadScene("WinBattleScene"); break;
 
             default: break;
         }
