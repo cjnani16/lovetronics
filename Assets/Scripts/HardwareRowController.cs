@@ -29,7 +29,6 @@ public class HardwareRowController : MonoBehaviour
         switch (hardware.category)
         {
             case Hardware.Category.CHASSIS:
-                Debug.Log("setting selected chassis to " + hardware.name);
                 GameManager.manager.setSelectedChassis(hardware);
                 break;
             case Hardware.Category.LOCOMOTION:
@@ -69,8 +68,6 @@ public class HardwareRowController : MonoBehaviour
 
     public void setBackgroundColor()
     {
-        Debug.Log(hardware.name);
-        Debug.Log(GameManager.manager.getSelectedChassis().name);
         Image border = transform.Find("HardwareBorder").gameObject.GetComponent<Image>();
         Image background = transform.Find("HardwareBackground").gameObject.GetComponent<Image>();
         if (isSelected())

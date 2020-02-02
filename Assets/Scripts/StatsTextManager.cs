@@ -25,30 +25,30 @@ public class StatsTextManager : MonoBehaviour
         updateRGNText(stats.getCoolantRegen());
     }
 
-    // void Update()
-    // {
-    //     PlayerStats stats = GameManager.manager.getBaseStats();
-    //     if (stats.getMaxHealth() != lastHP)
-    //     {
-    //         updateHPText(stats.getMaxHealth());
-    //     }
-    //     if (stats.getAttack() != lastATK)
-    //     {
-    //         updateATKText(stats.getAttack());
-    //     }
-    //     if (stats.getDefense() != lastDEF)
-    //     {
-    //         updateDEFText(stats.getDefense());
-    //     }
-    //     if (stats.getMaxCoolant() != lastCOOL)
-    //     {
-    //         updateCOOLText(stats.getMaxCoolant());
-    //     }
-    //     if (stats.getCoolantRegen() != lastRGN)
-    //     {
-    //         updateRGNText(stats.getCoolantRegen());
-    //     }
-    // }
+    void Update()
+    {
+        PlayerStats stats = GameManager.manager.getBaseStats();
+        if (stats.getMaxHealth() != lastHP)
+        {
+            updateHPText(stats.getMaxHealth());
+        }
+        if (stats.getAttack() != lastATK)
+        {
+            updateATKText(stats.getAttack());
+        }
+        if (stats.getDefense() != lastDEF)
+        {
+            updateDEFText(stats.getDefense());
+        }
+        if (stats.getMaxCoolant() != lastCOOL)
+        {
+            updateCOOLText(stats.getMaxCoolant());
+        }
+        if (stats.getCoolantRegen() != lastRGN)
+        {
+            updateRGNText(stats.getCoolantRegen());
+        }
+    }
 
     private void updateHPText(int newValue)
     {
