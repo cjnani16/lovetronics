@@ -8,6 +8,8 @@ public class Hardware
 {
     public enum Category { CHASSIS, LOCOMOTION, EQUIPMENT };
 
+    public int id;
+
     public string name;
     public Category category;
 
@@ -15,8 +17,9 @@ public class Hardware
     public Ability ability;
 
 
-    public Hardware(string n, Category c, PlayerStats s)
+    public Hardware(int i, string n, Category c, PlayerStats s)
     {
+        id = i;
         name = n;
         category = c;
         statBoosts = s;

@@ -28,12 +28,19 @@ public class GameManager : MonoBehaviour
 
         inventory = new Inventory();
 
-        selectedChassis = inventory.getAllHardwareOfCategory(Hardware.Category.CHASSIS)[0];
+        Hardware c2 = inventory.getAllHardwareOfCategory(Hardware.Category.CHASSIS)[1];
+        selectedChassis = c2; // inventory.getAllHardwareOfCategory(Hardware.Category.CHASSIS)[0];
         selectedLocomotion = inventory.getAllHardwareOfCategory(Hardware.Category.LOCOMOTION)[0];
         selectedEquipment = inventory.getAllHardwareOfCategory(Hardware.Category.EQUIPMENT)[0];
 
+        Hardware c3 = inventory.getAllHardwareOfCategory(Hardware.Category.CHASSIS)[2];
+
+        Hardware e3 = inventory.getAllHardwareOfCategory(Hardware.Category.EQUIPMENT)[2];
+        Hardware l3 = inventory.getAllHardwareOfCategory(Hardware.Category.LOCOMOTION)[2];
+
+
         // Starting Inventory
-        hardware = new List<Hardware> { selectedChassis, selectedLocomotion, selectedEquipment };
+        hardware = new List<Hardware> { c2, c3, selectedLocomotion, selectedEquipment, e3, l3 };
 
         baseStats = calculateBaseStats();
 
