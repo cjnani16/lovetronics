@@ -10,7 +10,7 @@ public class PlayerImageController : MonoBehaviour
     void Start()
     {
         Image img = GetComponent<Image>();
-        img.sprite = getSprite();
+        img.sprite = GameManager.manager.getSprite();
         img.sprite = Resources.Load<Sprite>("c2_e1_l1_test");
         img.sprite = Resources.Load<Sprite>("c3_e3_l3_test");
     }
@@ -18,19 +18,10 @@ public class PlayerImageController : MonoBehaviour
     void Update()
     {
         Image img = GetComponent<Image>();
-        img.sprite = getSprite();
+        img.sprite = GameManager.manager.getSprite();
     }
 
-    private Sprite getSprite()
-    {
-        int chassisID = GameManager.manager.getSelectedChassis().id;
-        int equipmentID = GameManager.manager.getSelectedEquipment().id;
-        int locomotionID = GameManager.manager.getSelectedLocomotion().id;
-
-        Debug.Log("c" + chassisID + "_e" + equipmentID + "_l" + locomotionID + "_test");
-
-        return Resources.Load<Sprite>("c" + chassisID + "_e" + equipmentID + "_l" + locomotionID + "_test");
-    }
+    
 
 
 }

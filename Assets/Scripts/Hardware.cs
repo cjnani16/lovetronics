@@ -9,7 +9,6 @@ public class Hardware
     public enum Category { CHASSIS, LOCOMOTION, EQUIPMENT };
 
     public int id;
-
     public string name;
     public Category category;
 
@@ -22,6 +21,7 @@ public class Hardware
         name = n;
         category = c;
         statBoosts = s;
+        abilities = new List<Ability>();
     }
 
     public List<Ability> getAbilities()
@@ -37,5 +37,10 @@ public class Hardware
     public Category getCategory()
     {
         return category;
+    }
+
+    public void addAbility(Ability a)
+    {
+        this.abilities.Add(a);
     }
 }

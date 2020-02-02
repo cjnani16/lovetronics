@@ -150,19 +150,17 @@ public class BattleManager : MonoBehaviour
     }
     
     List<Ability> DrawMoves() {
+        List<Ability> movePool = GameManager.manager.getAllAbilities();
         //TODO: get these from hardware
-        List<Ability> generatedMoves = new List<Ability>();
+        List<Ability> drawnMoves = new List<Ability>();
 
-        //add a couple random placeholder moves for now
-        for (int i = 0; i <3; i++) {
-            Ability thisMove = new Ability("Random Move"+i, "random description "+i, Random.Range(0.0f,1.0f), Random.Range(4,50));
-            generatedMoves.Add(thisMove);
-            if (Random.Range(0,2) == 1) {
-                thisMove.AddEffect("Random Attack Boost", new PlayerStats(10,0,0,0,0), 2);
-            }
+        while (drawnMoves.Count < 3) {
+            int index = Random.Range(0, movePool.Count);
+            drawnMoves.Add(movePool[index]);
+            movePool.RemoveAt(index);
         }
 
-        return generatedMoves;
+        return drawnMoves;
     }
 
     List<Ability> EnemyDrawMoves() {
@@ -303,6 +301,12 @@ public class BattleManager : MonoBehaviour
         PlayerState = new BattlerState(GameManager.manager.getBaseStats());
         EnemyState = new BattlerState(new PlayerStats(66,66,66,66,66));
 
+        //set appropriate sprite
+        Sprite defaultSprite = PlayerBotImage.GetComponent<Image>().sprite;
+        Sprite loadedSprite = GameManager.manager.getSprite();
+        PlayerBotImage.GetComponent<Image>().sprite = (loadedSprite == null)? defaultSprite : loadedSprite;
+        PlayerBotImage.GetComponent<RectTransform>().sizeDelta = PlayerBotImage.GetComponent<Image>().sprite.rect.size;
+
         CreateBuffDebuffs();
         InitHealthCoolantUI();
 
@@ -331,6 +335,7 @@ public class BattleManager : MonoBehaviour
                     Debug.Log("Start enemy attack animation (3s)");
                     CheckWinLossState();
                     if (currentBattleState!=BattleState.Win) EnemyTurnAnnounce();
+                    else EnemyBotImage.GetComponent<Animator>().Play("EnemyDeathAnimation");
                 }
             } break;
 
@@ -345,6 +350,7 @@ public class BattleManager : MonoBehaviour
                     EnemyCardDestroy();
                     CheckWinLossState();
                     if (currentBattleState!=BattleState.Loss) PresentMoves();
+                    else PlayerBotImage.GetComponent<Animator>().Play("PlayerDeathAnimation");
 
                     //regen and other end of turn effects
                     PlayerState.ApplyTurnEndEffects();
@@ -353,8 +359,14 @@ public class BattleManager : MonoBehaviour
                 }
             } break;
 
-            case BattleState.Loss: SceneManager.LoadScene("LoseBattleScene"); break;
-            case BattleState.Win: SceneManager.LoadScene("WinBattleScene"); break;
+            case BattleState.Loss: {
+                t+=Time.deltaTime;
+                if (t>2) SceneManager.LoadScene("LoseBattleScene"); break;
+            }
+            case BattleState.Win: {
+                t+=Time.deltaTime;
+                if (t>2) SceneManager.LoadScene("WinBattleScene"); break;
+            }
 
             default: break;
         }

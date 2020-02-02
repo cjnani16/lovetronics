@@ -122,4 +122,22 @@ public class GameManager : MonoBehaviour
         selectedEquipment = equipment;
         baseStats = calculateBaseStats();
     }
+
+    public List<Ability> getAllAbilities() {
+        List<Ability> list = new List<Ability>();
+        foreach (Hardware hw in hardware) {
+            list.AddRange(hw.abilities);
+        }
+        return list;
+    }
+
+    public Sprite getSprite()
+    {
+        int chassisID = getSelectedChassis().id;
+        int equipmentID = getSelectedEquipment().id;
+        int locomotionID = getSelectedLocomotion().id;
+
+        return Resources.Load<Sprite>("c" + chassisID + "_e" + equipmentID + "_l" + locomotionID + "_test");
+    }
+
 }
