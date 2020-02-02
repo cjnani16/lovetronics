@@ -18,7 +18,7 @@ public class HardwarePanelController : MonoBehaviour
         options = allHardware.Where(h => h.getCategory() == category).ToList();
         for (int i = 0; i < options.Count; i++)
         {
-            GameObject row = Instantiate(hardwareRowPrefab, new Vector3(562, 930 - i * 310, 0), Quaternion.identity);
+            GameObject row = Instantiate(hardwareRowPrefab, new Vector3(562, 920 - i * 310, 0), Quaternion.identity);
             row.transform.SetParent(transform);
             HardwareRowController rowController = row.GetComponent<HardwareRowController>();
             rowController.hardware = options[i];

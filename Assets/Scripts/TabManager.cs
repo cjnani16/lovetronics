@@ -8,7 +8,7 @@ public class TabManager : MonoBehaviour
     public List<GameObject> pages;
     public List<GameObject> tabs;
 
-    public int selectedTab = 0; // 0 = chassis, 1 = leg, 2 = equip
+    public int selectedTab = 0; // 0 = chassis, 1 = locomotion, 2 = equipment
 
     void Start()
     {
