@@ -3,18 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Hardware : MonoBehaviour, IRobotConfig
-{
-    private PlayerStats statBoosts;
-    private List<Ability> abilities;
 
-    public List<Ability> getAbilities()
+public class Hardware
+{
+    public enum Category { CHASSIS, LOCOMOTION, EQUIPMENT };
+
+    public string name;
+    public Category category;
+
+    public PlayerStats statBoosts;
+    public Ability ability;
+
+
+    public Hardware(string n, Category c, PlayerStats s)
     {
-        return abilities;
+        name = n;
+        category = c;
+        statBoosts = s;
+    }
+
+    public Ability getAbility()
+    {
+        return ability;
     }
 
     public PlayerStats getStatBoosts()
     {
         return statBoosts;
+    }
+
+    public Category getCategory()
+    {
+        return category;
     }
 }
