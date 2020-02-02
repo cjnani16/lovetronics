@@ -40,5 +40,14 @@ public class PlayerStats
         return coolantRegen;
     }
 
+    public static PlayerStats operator +(PlayerStats a, PlayerStats b) {
+        return new PlayerStats(
+            a.getAttack()+b.getAttack(), 
+            a.getDefense()+b.getDefense(),
+            a.getMaxHealth() + b.getMaxHealth(),
+            a.getMaxCoolant()+b.getMaxCoolant(),
+            a.getCoolantRegen()+b.getCoolantRegen()
+        );
+    }
 
 }
