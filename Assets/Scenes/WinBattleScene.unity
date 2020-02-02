@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fe7b5e0869604beda46e49ffdb141da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NextSceneName: CustomizationScene
+  NextSceneName: ChooseOpponentScreen
 --- !u!114 &120978364
 MonoBehaviour:
   m_ObjectHideFlags: 0
