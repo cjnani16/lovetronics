@@ -13,14 +13,18 @@ public class Hardware
     public Category category;
 
     public PlayerStats statBoosts;
+
+    public Sprite sprite;
     public List<Ability> abilities;
 
-    public Hardware(int i, string n, Category c, PlayerStats s)
+
+    public Hardware(int i, string n, Category c, PlayerStats s, string path)
     {
         id = i;
         name = n;
         category = c;
         statBoosts = s;
+        sprite = Resources.Load<Sprite>(path);
         abilities = new List<Ability>();
     }
 

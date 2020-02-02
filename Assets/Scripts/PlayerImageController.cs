@@ -9,19 +9,24 @@ public class PlayerImageController : MonoBehaviour
     public Sprite sprite;
     void Start()
     {
-        Image img = GetComponent<Image>();
-        img.sprite = GameManager.manager.getSprite();
-        img.sprite = Resources.Load<Sprite>("c2_e1_l1_test");
-        img.sprite = Resources.Load<Sprite>("c3_e3_l3_test");
+        updateImage();
     }
 
     void Update()
     {
-        Image img = GetComponent<Image>();
-        img.sprite = GameManager.manager.getSprite();
+        updateImage();
     }
 
-    
+    private void updateImage()
+    {
+        Image img = GetComponent<Image>();
+        img.sprite = GameManager.manager.getSprite();
+        // transform.scale.x = 0.9;
+        // transform.scale.y = 0.9;
+        GetComponent<RectTransform>().sizeDelta = Vector2.Scale(GetComponent<Image>().sprite.rect.size, new Vector2(0.85f, 0.85f));
+    }
+
+
 
 
 }
