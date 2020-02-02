@@ -12,6 +12,7 @@ public class HardwareRowController : MonoBehaviour
     {
         Text name = transform.Find("Name").gameObject.GetComponent<Text>();
         name.text = hardware.name;
+        transform.Find("Ability").GetComponent<Text>().text = hardware.description;
         PlayerStats stats = hardware.statBoosts;
         Text statBoosts = transform.Find("StatBoosts").gameObject.GetComponent<Text>();
         statBoosts.text = "HP: " + getStringFromInt(stats.getMaxHealth())

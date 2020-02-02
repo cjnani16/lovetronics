@@ -39,6 +39,14 @@ public class PlayerStats
     {
         return coolantRegen;
     }
+    public PlayerStats zeroMin() {
+        attack = Mathf.Max(0,attack);
+        defense = Mathf.Max(0,defense);
+        maxHealth = Mathf.Max(1,maxHealth);
+        maxCoolant = Mathf.Max(0,maxCoolant);
+        coolantRegen = Mathf.Max(0,coolantRegen);
+        return this;
+    }
 
     public static PlayerStats operator +(PlayerStats a, PlayerStats b) {
         return new PlayerStats(
@@ -58,6 +66,37 @@ public class PlayerStats
             Mathf.RoundToInt(a.getMaxCoolant()*b),
             Mathf.RoundToInt(a.getCoolantRegen()*b)
         );
+    }
+
+    public string stringify() {
+        List<string> s = new List<string>();
+
+        if (this.getAttack()>0)
+            s.Add("Attack "+this.getAttack()+"↑");
+        else if (this.getAttack()<0)
+            s.Add("Attack "+this.getAttack()+"↓");
+
+        if (this.getDefense()>0)
+            s.Add("Defense "+this.getDefense()+"↑");
+        else if (this.getDefense()<0)
+            s.Add("Defense "+this.getDefense()+"↓");
+
+        if (this.getCoolantRegen()>0)
+            s.Add("Regen "+this.getCoolantRegen()+"↑");
+        else if (this.getCoolantRegen()<0)
+            s.Add("Regen "+this.getCoolantRegen()+"↓");
+
+        if (this.getMaxCoolant()>0)
+            s.Add("Coolant "+this.getMaxCoolant()+"↑");
+        else if (this.getMaxCoolant()<0)
+            s.Add("Coolant "+this.getMaxCoolant()+"↓");
+
+        if (this.getMaxHealth()>0)
+            s.Add("HP "+this.getMaxHealth()+"↑");
+        else if (this.getMaxHealth()<0)
+            s.Add("HP "+this.getMaxHealth()+"↓");
+
+        return System.String.Join(", ", s.ToArray());
     }
 
 }

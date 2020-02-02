@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
         return new PlayerStats(
             Mathf.Max(atk, 0),
             Mathf.Max(def, 0),
-            Mathf.Max(hp, 0),
+            Mathf.Max(hp, 1),
             Mathf.Max(cool, 0),
             Mathf.Max(rgn, 0)
         );
@@ -87,6 +87,15 @@ public class GameManager : MonoBehaviour
     public void setBaseStats(PlayerStats stats)
     {
         baseStats = stats;
+    }
+
+    public List<Hardware> getEquippedHardware()
+    {
+        List<Hardware> equipped = new List<Hardware>();
+        equipped.Add(selectedEquipment);
+        equipped.Add(selectedLocomotion);
+        equipped.Add(selectedChassis);
+        return equipped;
     }
 
     public List<Hardware> getHardware()

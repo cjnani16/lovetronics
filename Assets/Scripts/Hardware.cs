@@ -9,29 +9,32 @@ public class Hardware
     public enum Category { CHASSIS, LOCOMOTION, EQUIPMENT };
 
     public int id;
-    public string name;
+    public string name, description;
     public Category category;
 
     public PlayerStats statBoosts;
 
     public Sprite sprite;
     public List<Ability> abilities;
+    public string soundName;
 
 
-    public Hardware(int i, string n, Category c, PlayerStats s, string path)
+    public Hardware(int i, string n, string d, Category c, PlayerStats s, string path)
     {
         id = i;
-        name = n;
+        name = n+" "+c.ToString();
+        description = d;
         category = c;
         statBoosts = s;
         sprite = Resources.Load<Sprite>(path);
         abilities = new List<Ability>();
     }
 
-    public Hardware(int i, string n, Category c, PlayerStats s, Sprite sp)
+    public Hardware(int i, string n, string d, Category c, PlayerStats s, Sprite sp)
     {
         id = i;
-        name = n;
+        name = n+" "+c.ToString();
+        description = d;
         category = c;
         statBoosts = s;
         sprite = sp;
@@ -52,7 +55,7 @@ public class Hardware
             prefix = "Ruined";
         }
 
-        Hardware hw = new Hardware(id, prefix+" "+name, category, statBoosts*modi, sprite);
+        Hardware hw = new Hardware(id, prefix+" "+name.Split(' ')[0], description, category, statBoosts*modi, sprite);
         hw.abilities.AddRange(abilities);
         return hw;
     }

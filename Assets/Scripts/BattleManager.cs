@@ -27,7 +27,7 @@ public class BattlerState {
         foreach (BuffDebuff b in buffsAndDebuffs) {
             altered += b.GetStatChanges();
         }
-        return altered;
+        return altered.zeroMin();
     }
 
     bool isExpired (BuffDebuff b) {
@@ -67,6 +67,7 @@ class MoveListener {
         target.health -= move.damageCalc(ref user, ref target);
         if (target.health<0) target.health=0;
         if (user.coolant<0) user.coolant=0;
+        move.playSound();
 
         //place buffs and debuffs onto the user
         foreach(BuffDebuff b in move.appliedEffects) {
@@ -107,54 +108,55 @@ public class BattleManager : MonoBehaviour
     float riseSpeed=400;
 
     void CreateBuffDebuffs () {
-        playerBuffsAndDebuffsText = GameObject.Instantiate(BuffDebuffIndicatorPrefab, new Vector3(-160,-409), Quaternion.identity);
+        playerBuffsAndDebuffsText = GameObject.Instantiate(BuffDebuffIndicatorPrefab, new Vector3(-169,-257), Quaternion.identity);
         playerBuffsAndDebuffsText.transform.SetParent(UICanvas.transform, false);
-        playerBuffsAndDebuffsText.GetComponent<Text>().alignment = TextAnchor.MiddleLeft;
+        playerBuffsAndDebuffsText.GetComponent<Text>().alignment = TextAnchor.UpperLeft;
 
-        enemyBuffsAndDebuffsText = GameObject.Instantiate(BuffDebuffIndicatorPrefab, new Vector3(165,-409), Quaternion.identity);
+        enemyBuffsAndDebuffsText = GameObject.Instantiate(BuffDebuffIndicatorPrefab, new Vector3(177,-257), Quaternion.identity);
         enemyBuffsAndDebuffsText.transform.SetParent(UICanvas.transform, false);
-        enemyBuffsAndDebuffsText.GetComponent<Text>().alignment = TextAnchor.MiddleRight;
+        enemyBuffsAndDebuffsText.GetComponent<Text>().alignment = TextAnchor.UpperRight;
     }
     void DrawBuffDebuffs() {
         //player b/ds
-        playerBuffsAndDebuffsText.GetComponent<Text>().text = "";
+        PlayerStats totalChanges = new PlayerStats(0,0,0,0,0);
         for (int i=0; i<PlayerState.buffsAndDebuffs.Count; i++) {
-            string s = PlayerState.buffsAndDebuffs[i].stringify();
-            playerBuffsAndDebuffsText.GetComponent<Text>().text += s;
+            totalChanges += PlayerState.buffsAndDebuffs[i].GetStatChanges();
         }
+        playerBuffsAndDebuffsText.GetComponent<Text>().text = totalChanges.stringify();
+
 
         //enemy b/ds
-        enemyBuffsAndDebuffsText.GetComponent<Text>().text = "";
+        PlayerStats eTotalChanges = new PlayerStats(0,0,0,0,0);
         for (int i=0; i<EnemyState.buffsAndDebuffs.Count; i++) {
-            string s = EnemyState.buffsAndDebuffs[i].stringify();
-            enemyBuffsAndDebuffsText.GetComponent<Text>().text += s;
+            eTotalChanges += EnemyState.buffsAndDebuffs[i].GetStatChanges();
         }
+        enemyBuffsAndDebuffsText.GetComponent<Text>().text = eTotalChanges.stringify();
     }
 
     void InitHealthCoolantUI() {
-        currentHCUI = Instantiate(HealthCoolantUI, Vector3.zero, Quaternion.identity);
+        currentHCUI = Instantiate(HealthCoolantUI, new Vector3(0,150,0), Quaternion.identity);
         currentHCUI.transform.SetParent(UICanvas.transform,false);
     }
     void UpdateHealthCoolantUI() {
         //player bars
-        currentHCUI.transform.Find("PlayerHBarBack").Find("PlayerHBarFront").GetComponent<RectTransform>().localScale = new Vector3(PlayerState.health/PlayerState.stats.getMaxHealth(),1,1);
+        currentHCUI.transform.Find("PlayerHBarBack").Find("PlayerHBarFront").GetComponent<RectTransform>().localScale = new Vector3(PlayerState.health/PlayerState.getAlteredStats().getMaxHealth(),1,1);
         if (currentHCUI.transform.Find("PlayerHBarBack").Find("PlayerHBarBleed").GetComponent<RectTransform>().localScale.x > currentHCUI.transform.Find("PlayerHBarBack").Find("PlayerHBarFront").GetComponent<RectTransform>().localScale.x) 
            currentHCUI.transform.Find("PlayerHBarBack").Find("PlayerHBarBleed").GetComponent<RectTransform>().localScale -= new Vector3(0.01f,0,0);
         else
            currentHCUI.transform.Find("PlayerHBarBack").Find("PlayerHBarBleed").GetComponent<RectTransform>().localScale = currentHCUI.transform.Find("PlayerHBarBack").Find("PlayerHBarFront").GetComponent<RectTransform>().localScale;
         
-        currentHCUI.transform.Find("PlayerCBarBack").Find("PlayerCBarFront").GetComponent<RectTransform>().localScale = new Vector3(PlayerState.coolant/PlayerState.stats.getMaxCoolant(),1,1);
+        currentHCUI.transform.Find("PlayerCBarBack").Find("PlayerCBarFront").GetComponent<RectTransform>().localScale = new Vector3(PlayerState.coolant/PlayerState.getAlteredStats().getMaxCoolant(),1,1);
         currentHCUI.transform.Find("PlayerCBarBack").Find("PlayerCBarLabel").GetComponent<Text>().text = ""+PlayerState.coolant;
         currentHCUI.transform.Find("PlayerHBarBack").Find("PlayerHBarLabel").GetComponent<Text>().text = ""+PlayerState.health;
 
         //enemy bars
-        currentHCUI.transform.Find("EnemyHBarBack").Find("EnemyHBarFront").GetComponent<RectTransform>().localScale = new Vector3(EnemyState.health/EnemyState.stats.getMaxHealth(),1,1);
+        currentHCUI.transform.Find("EnemyHBarBack").Find("EnemyHBarFront").GetComponent<RectTransform>().localScale = new Vector3(EnemyState.health/EnemyState.getAlteredStats().getMaxHealth(),1,1);
         if (currentHCUI.transform.Find("EnemyHBarBack").Find("EnemyHBarBleed").GetComponent<RectTransform>().localScale.x > currentHCUI.transform.Find("EnemyHBarBack").Find("EnemyHBarFront").GetComponent<RectTransform>().localScale.x) 
            currentHCUI.transform.Find("EnemyHBarBack").Find("EnemyHBarBleed").GetComponent<RectTransform>().localScale -= new Vector3(0.01f,0,0);
         else
            currentHCUI.transform.Find("EnemyHBarBack").Find("EnemyHBarBleed").GetComponent<RectTransform>().localScale = currentHCUI.transform.Find("EnemyHBarBack").Find("EnemyHBarFront").GetComponent<RectTransform>().localScale;
         
-        currentHCUI.transform.Find("EnemyCBarBack").Find("EnemyCBarFront").GetComponent<RectTransform>().localScale = new Vector3(EnemyState.coolant/EnemyState.stats.getMaxCoolant(),1,1);
+        currentHCUI.transform.Find("EnemyCBarBack").Find("EnemyCBarFront").GetComponent<RectTransform>().localScale = new Vector3(EnemyState.coolant/EnemyState.getAlteredStats().getMaxCoolant(),1,1);
         currentHCUI.transform.Find("EnemyCBarBack").Find("EnemyCBarLabel").GetComponent<Text>().text = ""+EnemyState.coolant;
         currentHCUI.transform.Find("EnemyHBarBack").Find("EnemyHBarLabel").GetComponent<Text>().text = ""+EnemyState.health;
 
@@ -190,21 +192,42 @@ public class BattleManager : MonoBehaviour
         List<Ability> availableMoves = EnemyDrawMoves();
         Ability chosenMove = availableMoves[Random.Range(0,availableMoves.Count)];
 
-        enemyChosenMove = GameObject.Instantiate(MoveListItemPrefab, new Vector3(1000, -1070, 0), Quaternion.identity);
-        enemyChosenMove.transform.SetParent(UICanvas.transform,false);
-        enemyChosenMove.GetComponent<Image>().color = new Color(1,0.2f,0.2f,1);
+        while (chosenMove.cost > EnemyState.coolant) {
+            availableMoves.Remove(chosenMove);
+            chosenMove = availableMoves.Count>0 ? availableMoves[Random.Range(0,availableMoves.Count)] : new Ability("Pass", "Skip a turn to cool down",0,0,"");
+        }
 
-        //Set fields
-        enemyChosenMove.transform.Find("NameText").GetComponent<Text>().text = chosenMove.name;
-        enemyChosenMove.transform.Find("DescriptionText").GetComponent<Text>().text = chosenMove.description;
-        enemyChosenMove.transform.Find("PowerText").GetComponent<Text>().text = ""+chosenMove.damageCalc(ref EnemyState, ref PlayerState);
-        enemyChosenMove.transform.Find("CoolantText").GetComponent<Text>().text = "("+chosenMove.cost+")";
+        if (chosenMove.name != "Pass")
+        {
+            enemyChosenMove = GameObject.Instantiate(MoveListItemPrefab, new Vector3(1000, -1070, 0), Quaternion.identity);
+            enemyChosenMove.transform.SetParent(UICanvas.transform,false);
+            enemyChosenMove.GetComponent<Image>().color = new Color(1,0.2f,0.2f,1);
 
-        MoveListener m = new MoveListener(chosenMove);
-        m.Activate(ref EnemyState, ref PlayerState);
+            //Set fields
+            enemyChosenMove.transform.Find("NameText").GetComponent<Text>().text = chosenMove.name;
+            enemyChosenMove.transform.Find("DescriptionText").GetComponent<Text>().text = chosenMove.description;
+            enemyChosenMove.transform.Find("PowerText").GetComponent<Text>().text = ""+chosenMove.damageCalc(ref EnemyState, ref PlayerState);
+            enemyChosenMove.transform.Find("CoolantText").GetComponent<Text>().text = "("+chosenMove.cost+")";
+
+            MoveListener m = new MoveListener(chosenMove);
+            m.Activate(ref EnemyState, ref PlayerState);
+
+            PlayerBotImage.GetComponent<Animator>().Play("PlayerHurtAnimation");
+            EnemyBotImage.GetComponent<Animator>().Play("EnemyAttackAnimation");
+        }
+        else 
+        {
+            enemyChosenMove = GameObject.Instantiate(PassTurnPrefab, new Vector3(1000, -1070, 0), Quaternion.identity);
+            enemyChosenMove.transform.SetParent(UICanvas.transform,false);
+            enemyChosenMove.GetComponent<Image>().color = Color.yellow;
+
+            //Set fields
+            enemyChosenMove.transform.Find("CoolantText").GetComponent<Text>().text = "(+"+2*EnemyState.getAlteredStats().getCoolantRegen()+")";
+            
+            //Give them the passing buff
+            EnemyState.buffsAndDebuffs.Add(new BuffDebuff("Passed a Turn",new PlayerStats(0,0,0,0,(EnemyState.getAlteredStats().getCoolantRegen())),1));
+        }
         
-        PlayerBotImage.GetComponent<Animator>().Play("PlayerHurtAnimation");
-        EnemyBotImage.GetComponent<Animator>().Play("EnemyAttackAnimation");
     }
 
     void EnemyCardUpdate() {
@@ -229,7 +252,7 @@ public class BattleManager : MonoBehaviour
         skipMove.transform.SetParent(UICanvas.transform,false);
         skipMove.GetComponent<Image>().color = Color.yellow;
         //Set fields
-        skipMove.transform.Find("CoolantText").GetComponent<Text>().text = "(+"+PlayerState.stats.getCoolantRegen()+")";
+        skipMove.transform.Find("CoolantText").GetComponent<Text>().text = "(+"+2*PlayerState.getAlteredStats().getCoolantRegen()+")";
         skipMove.GetComponent<Button>().onClick.AddListener(() => { OnChoseAttack(true);});
 
         moveListPanels.Add(skipMove);
@@ -271,6 +294,8 @@ public class BattleManager : MonoBehaviour
             //animate
             PlayerBotImage.GetComponent<Animator>().Play("PlayerAttackAnimation");
             EnemyBotImage.GetComponent<Animator>().Play("EnemyHurtAnimation");
+        } else {
+            PlayerState.buffsAndDebuffs.Add(new BuffDebuff("Passed a Turn",new PlayerStats(0,0,0,0,(PlayerState.getAlteredStats().getCoolantRegen())),1));
         }
 
         this.currentBattleState = BattleState.AttackAnimation;
@@ -311,7 +336,7 @@ public class BattleManager : MonoBehaviour
         hwList.Add(enemy_equipment);
         hwList.Add(enemy_locomotion);
 
-        EnemyState = new BattlerState(new PlayerStats(66,66,66,66,66), hwList);
+        EnemyState = new BattlerState(new PlayerStats(66,66,66,66,2), hwList);
     }
     
     // Start is called before the first frame update
@@ -320,16 +345,20 @@ public class BattleManager : MonoBehaviour
         currentBattleState = BattleState.Start;
 
         //init health and coolant
-        PlayerState = new BattlerState(GameManager.manager.getBaseStats(),GameManager.manager.getHardware());
+        PlayerState = new BattlerState(GameManager.manager.getBaseStats(),GameManager.manager.getEquippedHardware());
+
+        Debug.Log("Player hw:");
+        foreach (Hardware hw in PlayerState.hardware) {
+            Debug.Log(hw.name);
+        }
 
         AssembleAnEnemy();
 
-        //set appropriate sprite
+        //set appropriate sprite, keep all sprites on equal ground height
         Sprite defaultSprite = PlayerBotImage.GetComponent<Image>().sprite;
         Sprite loadedSprite = GameManager.manager.getSprite();
         PlayerBotImage.GetComponent<Image>().sprite = (loadedSprite == null)? defaultSprite : loadedSprite;
         float prevHeight = PlayerBotImage.GetComponent<RectTransform>().sizeDelta.y;
-
         PlayerBotImage.GetComponent<RectTransform>().sizeDelta = PlayerBotImage.GetComponent<Image>().sprite.rect.size;
         float moveDownAmt = prevHeight-PlayerBotImage.GetComponent<RectTransform>().sizeDelta.y;
 
@@ -377,12 +406,14 @@ public class BattleManager : MonoBehaviour
                     
                     EnemyCardDestroy();
                     CheckWinLossState();
-                    if (currentBattleState!=BattleState.Loss) PresentMoves();
-                    else PlayerBotImage.GetComponent<Animator>().Play("PlayerDeathAnimation");
 
                     //regen and other end of turn effects
                     PlayerState.ApplyTurnEndEffects();
                     EnemyState.ApplyTurnEndEffects();
+
+                    if (currentBattleState!=BattleState.Loss) PresentMoves();
+                    else PlayerBotImage.GetComponent<Animator>().Play("PlayerDeathAnimation");
+
                     riseSpeed=400;
                 }
             } break;
