@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/WinBattleScene.unity
     guid: c77351e06c4034b9dae768ffd52027fb
+  - enabled: 1
+    path: Assets/Scenes/ChooseOpponentScreen.unity
+    guid: 2c9f273dcf7bb40c2bb3d3def59794bc
   m_configObjects: {}

@@ -4,12 +4,25 @@ using UnityEngine;
 
 public class BuffDebuff
 {
+    public bool isHealBleed;
+    public float healBleedAmt;
     public string name;
     private PlayerStats statChanges;
     private int duration;
+
     public BuffDebuff(string n, PlayerStats s, int d) {
         this.name = n;
         this.statChanges = s;
+        this.duration = d;
+        this.isHealBleed=false;
+    }
+
+    //heal or bleed (dot or instant)
+    public BuffDebuff(string n, float amount, int d) {
+        this.name = n;
+        this.statChanges = new PlayerStats(0,0,0,0,0);
+        this.healBleedAmt = amount;
+        this.isHealBleed=true;
         this.duration = d;
     }
 
@@ -32,6 +45,7 @@ public struct Ability
     public float power, cost;
     string sound;
     public List<BuffDebuff> appliedEffects;
+    public List<BuffDebuff> enemyAppliedEffects;
 
     public Ability(string name, string description, float power, float cost, string sound) {
         this.name = name;
@@ -39,6 +53,7 @@ public struct Ability
         this.power = power;
         this.cost = cost;
         this.appliedEffects = new List<BuffDebuff>();
+        this.enemyAppliedEffects = new List<BuffDebuff>();
         this.sound = sound;
     }
     public void AddEffect(string name, PlayerStats statChange, int duration) {
@@ -49,6 +64,16 @@ public struct Ability
     public void AddEffect(BuffDebuff e) {
         this.appliedEffects.Add(e);
         this.description+= ("\n"+e.GetStatChanges().stringify());
+    }
+
+    public void AddEnemyEffect(string name, PlayerStats statChange, int duration) {
+        this.enemyAppliedEffects.Add(new BuffDebuff(name, statChange, duration));
+        this.description+= ("\nTo enemy:"+statChange.stringify());
+    }
+
+    public void AddEnemyEffect(BuffDebuff e) {
+        this.enemyAppliedEffects.Add(e);
+        this.description+= ("\nTo enemy:"+e.GetStatChanges().stringify());
     }
 
     //for something more complex than a stat buff/debuff

@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     private Hardware droppedPart;
 
     private Inventory inventory;
+    private BattlerState nextOpponent;
 
     void Awake()
     {
@@ -144,11 +145,29 @@ public class GameManager : MonoBehaviour
         hardware.Add(hw);
     }
 
+    public void setNextOpponent(BattlerState enemy) {
+        this.nextOpponent = enemy;
+    }
+
+    public BattlerState getNextOpponent() {
+        return this.nextOpponent;
+    }
+
     public Sprite getSprite()
     {
         int chassisID = getSelectedChassis().id;
         int equipmentID = getSelectedEquipment().id;
         int locomotionID = getSelectedLocomotion().id;
+
+        return Resources.Load<Sprite>("c" + chassisID + "_e" + equipmentID + "_l" + locomotionID + "_test");
+    }
+
+    public Sprite getSprite(BattlerState battler)
+    {
+        //hope they're in order lol
+        int chassisID = battler.hardware[0].id;
+        int equipmentID = battler.hardware[1].id;
+        int locomotionID = battler.hardware[2].id;
 
         return Resources.Load<Sprite>("c" + chassisID + "_e" + equipmentID + "_l" + locomotionID + "_test");
     }

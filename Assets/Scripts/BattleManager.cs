@@ -360,7 +360,12 @@ public class BattleManager : MonoBehaviour
             Debug.Log(hw.name);
         }
 
-        AssembleAnEnemy();
+        BattlerState sel = GameManager.manager.getNextOpponent();
+        if (sel==null) {
+            AssembleAnEnemy();
+        } else {
+            this.EnemyState = sel;
+        }
 
         //set appropriate sprite, keep all sprites on equal ground height
         Sprite defaultSprite = PlayerBotImage.GetComponent<Image>().sprite;
@@ -371,6 +376,16 @@ public class BattleManager : MonoBehaviour
         float moveDownAmt = prevHeight-PlayerBotImage.GetComponent<RectTransform>().sizeDelta.y;
 
         PlayerBotImage.transform.parent.position -= new Vector3(0,moveDownAmt/2);
+
+        // for Enemy: set appropriate sprite, keep all sprites on equal ground height
+        defaultSprite = EnemyBotImage.GetComponent<Image>().sprite;
+        loadedSprite = GameManager.manager.getSprite(EnemyState);
+        EnemyBotImage.GetComponent<Image>().sprite = (loadedSprite == null)? defaultSprite : loadedSprite;
+        prevHeight = EnemyBotImage.GetComponent<RectTransform>().sizeDelta.y;
+        EnemyBotImage.GetComponent<RectTransform>().sizeDelta = EnemyBotImage.GetComponent<Image>().sprite.rect.size;
+        moveDownAmt = prevHeight-EnemyBotImage.GetComponent<RectTransform>().sizeDelta.y;
+
+        EnemyBotImage.transform.parent.position -= new Vector3(0,moveDownAmt/2);
 
         CreateBuffDebuffs();
         InitHealthCoolantUI();
