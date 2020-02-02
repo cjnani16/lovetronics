@@ -17,27 +17,18 @@ public class Hardware
     public Sprite sprite;
     public List<Ability> abilities;
     public string soundName;
+    int tier;
 
 
-    public Hardware(int i, string n, string d, Category c, PlayerStats s, string path)
+    public Hardware(int i, int t, string n, string d, Category c, PlayerStats s)
     {
         id = i;
+        tier = t;
         name = n+" "+c.ToString();
         description = d;
         category = c;
         statBoosts = s;
-        sprite = Resources.Load<Sprite>(path);
-        abilities = new List<Ability>();
-    }
-
-    public Hardware(int i, string n, string d, Category c, PlayerStats s, Sprite sp)
-    {
-        id = i;
-        name = n+" "+c.ToString();
-        description = d;
-        category = c;
-        statBoosts = s;
-        sprite = sp;
+        sprite = Resources.Load<Sprite>("Icons/"+System.Char.ToLower(c.ToString()[0])+id+"_"+tier);
         abilities = new List<Ability>();
     }
 
@@ -45,17 +36,22 @@ public class Hardware
     {
         float modi = Random.Range(0.5f,1.5f);
         string prefix = "";
+        int tier = 3;
         if (modi>1.45) {
             prefix = "Godlike";
+            tier = 5;
         } else if (modi>1.2) {
             prefix = "Enhanced";
+            tier = 4;
         } else if (modi < 0.8) {
             prefix = "Flawed";
+            tier = 2;
         } else if (modi < 0.6) {
             prefix = "Ruined";
+            tier = 1;
         }
 
-        Hardware hw = new Hardware(id, prefix+" "+name.Split(' ')[0], description, category, statBoosts*modi, sprite);
+        Hardware hw = new Hardware(id, tier, prefix+" "+name.Split(' ')[0], description, category, statBoosts*modi);
         hw.abilities.AddRange(abilities);
         return hw;
     }

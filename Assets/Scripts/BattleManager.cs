@@ -328,15 +328,23 @@ public class BattleManager : MonoBehaviour
     void AssembleAnEnemy() {
         int i = Random.Range(0,3);
         Hardware enemy_chassis = GameManager.manager.GetInventory().getAllHardwareOfCategory(Hardware.Category.CHASSIS)[i];
+        i = Random.Range(0,3);
         Hardware enemy_locomotion = GameManager.manager.GetInventory().getAllHardwareOfCategory(Hardware.Category.LOCOMOTION)[i];
+        i = Random.Range(0,3);
         Hardware enemy_equipment = GameManager.manager.GetInventory().getAllHardwareOfCategory(Hardware.Category.EQUIPMENT)[i];
+        
 
         List<Hardware> hwList = new List<Hardware>();
         hwList.Add(enemy_chassis);
         hwList.Add(enemy_equipment);
         hwList.Add(enemy_locomotion);
 
-        EnemyState = new BattlerState(new PlayerStats(66,66,66,66,2), hwList);
+        PlayerStats stats = new PlayerStats(50, 50, 200, 100, 10);
+        stats += enemy_chassis.getStatBoosts();
+        stats += enemy_equipment.getStatBoosts();
+        stats += enemy_locomotion.getStatBoosts();
+
+        EnemyState = new BattlerState(stats, hwList);
     }
     
     // Start is called before the first frame update
