@@ -17,6 +17,7 @@ public class TabManager : MonoBehaviour
 
     public void swapTab(int newTab)
     {
+        AudioManager.instance.Play("select");
         selectedTab = newTab;
         setSelectedTabColor();
         for (int i = 0; i < pages.Count; i++)

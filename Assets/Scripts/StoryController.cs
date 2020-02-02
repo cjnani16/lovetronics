@@ -24,8 +24,10 @@ public class StoryController : MonoBehaviour
     {
         if (Input.anyKeyDown)
         {
+            AudioManager.instance.Play("select");
             if (currentStorySection == storySections.Length)
             {
+
                 SceneManager.LoadScene(nextScene);
             }
             else
