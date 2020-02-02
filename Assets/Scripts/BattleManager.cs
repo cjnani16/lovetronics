@@ -388,7 +388,12 @@ public class BattleManager : MonoBehaviour
             }
             case BattleState.Win: {
                 t+=Time.deltaTime;
-                if (t>2) SceneManager.LoadScene("WinBattleScene"); break;
+                if (t>2) {
+                    int i = Random.Range(0, EnemyState.hardware.Count);
+                    GameManager.manager.setDroppedPart(EnemyState.hardware[i]);
+                    SceneManager.LoadScene("WinBattleScene"); 
+                }
+                break;
             }
 
             default: break;

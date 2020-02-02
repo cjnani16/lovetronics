@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     private Hardware selectedChassis;
     private Hardware selectedLocomotion;
     private Hardware selectedEquipment;
+    private Hardware droppedPart;
 
     private Inventory inventory;
 
@@ -106,6 +107,13 @@ public class GameManager : MonoBehaviour
         return selectedEquipment;
     }
 
+    public Hardware getDroppedPart() {
+        return droppedPart;
+    }
+
+    public void setDroppedPart(Hardware hw) {
+        droppedPart = hw;
+    }
 
     public void setSelectedChassis(Hardware chassis)
     {
