@@ -21,10 +21,8 @@ public class PlayerImageController : MonoBehaviour
     {
         Image img = GetComponent<Image>();
         Sprite defaultSprite = img.sprite;
-        img.sprite = (GameManager.manager.getSprite()!=null)?GameManager.manager.getSprite():defaultSprite;
-        // transform.scale.x = 0.9;
-        // transform.scale.y = 0.9;
-        GetComponent<RectTransform>().sizeDelta = Vector2.Scale(GetComponent<Image>().sprite.rect.size, new Vector2(0.85f, 0.85f));
+        img.sprite = (GameManager.manager.getSprite() != null) ? GameManager.manager.getSprite() : defaultSprite;
+        GetComponent<RectTransform>().sizeDelta = Vector2.Scale(GetComponent<Image>().sprite.rect.size, new Vector2(0.45f, 0.45f));
     }
 
 
