@@ -163,8 +163,8 @@ public class GameManager : MonoBehaviour
         int chassisID = getSelectedChassis().id;
         int equipmentID = getSelectedEquipment().id;
         int locomotionID = getSelectedLocomotion().id;
-
-        return Resources.Load<Sprite>("c" + chassisID + "_e" + equipmentID + "_l" + locomotionID + "_test");
+        string sprite = "Bots/c" + chassisID + "_l" + locomotionID + "_e" + equipmentID;
+        return Resources.Load<Sprite>(sprite);
     }
 
     public Sprite getSprite(BattlerState battler)
@@ -173,8 +173,8 @@ public class GameManager : MonoBehaviour
         int chassisID = battler.hardware[0].id;
         int equipmentID = battler.hardware[1].id;
         int locomotionID = battler.hardware[2].id;
-
-        return Resources.Load<Sprite>("c" + chassisID + "_e" + equipmentID + "_l" + locomotionID + "_test");
+        string sprite = "Bots/c" + chassisID + "_l" + locomotionID + "_e" + equipmentID;
+        return Resources.Load<Sprite>(sprite);
     }
 
     public Inventory GetInventory()
