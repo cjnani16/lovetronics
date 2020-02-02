@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
 
     public PlayerStats calculateBaseStats()
     {
-        PlayerStats defaultStats = new PlayerStats(50, 50, 200, 100, 10);
+        PlayerStats defaultStats = new PlayerStats(100, 50, 150, 100, 10);
         List<PlayerStats> allStats = new List<PlayerStats> {
             defaultStats,
             selectedChassis.getStatBoosts(),
@@ -116,11 +116,13 @@ public class GameManager : MonoBehaviour
         return selectedEquipment;
     }
 
-    public Hardware getDroppedPart() {
+    public Hardware getDroppedPart()
+    {
         return droppedPart;
     }
 
-    public void setDroppedPart(Hardware hw) {
+    public void setDroppedPart(Hardware hw)
+    {
         droppedPart = hw;
     }
 
@@ -140,7 +142,8 @@ public class GameManager : MonoBehaviour
         baseStats = calculateBaseStats();
     }
 
-    public void gainHardware(Hardware hw) {
+    public void gainHardware(Hardware hw)
+    {
         hardware.Add(hw);
     }
 
@@ -153,7 +156,8 @@ public class GameManager : MonoBehaviour
         return Resources.Load<Sprite>("c" + chassisID + "_e" + equipmentID + "_l" + locomotionID + "_test");
     }
 
-    public Inventory GetInventory() {
+    public Inventory GetInventory()
+    {
         return inventory;
     }
 }
