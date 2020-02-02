@@ -26,6 +26,7 @@ public class HardwareRowController : MonoBehaviour
 
     public void setSelectedHardware()
     {
+        AudioManager.instance.Play("select");
         switch (hardware.category)
         {
             case Hardware.Category.CHASSIS:
