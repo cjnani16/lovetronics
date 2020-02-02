@@ -720,6 +720,7 @@ MonoBehaviour:
   storyText: {fileID: 1798550114}
   storyPicture: {fileID: 1216199038}
   FadeIn: {fileID: 1964515221}
+  FadeOut: {fileID: 0}
   nextScene: Assets/Scenes/CustomizationScene.unity
   imgPerPanel:
   - {fileID: 21300000, guid: d4ac6fbf7e07c4d93a2d7a69187675de, type: 3}
@@ -731,6 +732,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 54a1ffececda943bc856c50edc8af111, type: 3}
   - {fileID: 21300000, guid: 9fba1cbba5bf741e2ba4db251cf339db, type: 3}
   - {fileID: 21300000, guid: 63e30e6d1117c427a9a5aeb1f507df64, type: 3}
+  - {fileID: 21300000, guid: 6451012674ffd4f4cb4d579f5b44b7de, type: 3}
+  - {fileID: 21300000, guid: 6451012674ffd4f4cb4d579f5b44b7de, type: 3}
+  - {fileID: 21300000, guid: 6451012674ffd4f4cb4d579f5b44b7de, type: 3}
+  - {fileID: 21300000, guid: 6451012674ffd4f4cb4d579f5b44b7de, type: 3}
 --- !u!4 &2089267081
 Transform:
   m_ObjectHideFlags: 0
@@ -810,7 +815,7 @@ PrefabInstance:
     - target: {fileID: 9056694336047883873, guid: 17aa208ae72f34e94b100bcc9cc29d09,
         type: 3}
       propertyPath: sounds.Array.size
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 9056694336047883873, guid: 17aa208ae72f34e94b100bcc9cc29d09,
         type: 3}
@@ -950,6 +955,31 @@ PrefabInstance:
     - target: {fileID: 9056694336047883873, guid: 17aa208ae72f34e94b100bcc9cc29d09,
         type: 3}
       propertyPath: sounds.Array.data[8].pitch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9056694336047883873, guid: 17aa208ae72f34e94b100bcc9cc29d09,
+        type: 3}
+      propertyPath: sounds.Array.data[9].name
+      value: siren
+      objectReference: {fileID: 0}
+    - target: {fileID: 9056694336047883873, guid: 17aa208ae72f34e94b100bcc9cc29d09,
+        type: 3}
+      propertyPath: sounds.Array.data[9].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 9cc9ded3daccd46fca97b7febbb8302e, type: 3}
+    - target: {fileID: 9056694336047883873, guid: 17aa208ae72f34e94b100bcc9cc29d09,
+        type: 3}
+      propertyPath: sounds.Array.data[9].volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9056694336047883873, guid: 17aa208ae72f34e94b100bcc9cc29d09,
+        type: 3}
+      propertyPath: sounds.Array.data[9].pitch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9056694336047883873, guid: 17aa208ae72f34e94b100bcc9cc29d09,
+        type: 3}
+      propertyPath: sounds.Array.data[9].loop
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9056694336047883886, guid: 17aa208ae72f34e94b100bcc9cc29d09,
