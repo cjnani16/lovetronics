@@ -21,7 +21,7 @@ public class StoryController : MonoBehaviour
         "..."
     };
     [SerializeField] public Sprite[] imgPerPanel;
-    float t=0;
+    float t = 0;
 
     void Start()
     {
@@ -35,6 +35,7 @@ public class StoryController : MonoBehaviour
             AudioManager.instance.Play("select");
             if (currentStorySection == storySections.Length)
             {
+                AudioManager.instance.Stop("siren");
                 FadeIn.GetComponent<Animator>().Play("FadeToBlack");
             }
             else
@@ -46,14 +47,22 @@ public class StoryController : MonoBehaviour
         if (currentStorySection >= storySections.Length)
         {
             currentStorySection = storySections.Length;
-            t+=Time.deltaTime;
-            if (t>2)
+            t += Time.deltaTime;
+            if (t > 2)
                 SceneManager.LoadScene(nextScene);
         }
     }
 
     private void ProgressStory()
     {
+        if (currentStorySection == 2)
+        {
+            AudioManager.instance.Play("gun1");
+        }
+        if (currentStorySection == 3)
+        {
+            AudioManager.instance.Play("siren");
+        }
         storyText.GetComponent<Text>().text = storySections[currentStorySection];
         storyPicture.GetComponent<Image>().sprite = imgPerPanel[currentStorySection];
         currentStorySection++;
