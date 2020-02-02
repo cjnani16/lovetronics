@@ -7,7 +7,9 @@ public class GameManager : MonoBehaviour
     public static GameManager manager = null;
     private PlayerStats baseStats;
     private List<Hardware> hardware;
-    private Hardware selectedHardware;
+    private Hardware selectedChassis;
+    private Hardware selectedLocomotion;
+    private Hardware selectedEquipment;
 
     void Awake()
     {
@@ -25,8 +27,11 @@ public class GameManager : MonoBehaviour
         Hardware chassis1 = new Hardware("Basic", Hardware.Category.CHASSIS, new PlayerStats(5, 5, -15, -10, 10));
         Hardware chassis2 = new Hardware("Aggressive", Hardware.Category.CHASSIS, new PlayerStats(10, 0, -10, 10, 0));
         Hardware loco1 = new Hardware("Wheel", Hardware.Category.LOCOMOTION, new PlayerStats(0, 10, 10, 10, 5));
-        hardware = new List<Hardware> { chassis1, chassis2, loco1 };
-        selectedHardware = chassis1;
+        Hardware equip1 = new Hardware("Sword", Hardware.Category.EQUIPMENT, new PlayerStats(30, -10, 0, 0, 0));
+        hardware = new List<Hardware> { chassis1, chassis2, loco1, equip1 };
+        selectedChassis = chassis2;
+        selectedLocomotion = loco1;
+        selectedEquipment = equip1;
     }
 
     public PlayerStats getBaseStats()
@@ -44,8 +49,30 @@ public class GameManager : MonoBehaviour
         return hardware;
     }
 
-    public Hardware getSelectedHardware()
+    public Hardware getSelectedChassis()
     {
-        return selectedHardware;
+        return selectedChassis;
+    }
+    public Hardware getSelectedLocomotion()
+    {
+        return selectedLocomotion;
+    }
+    public Hardware getSelectedEquipment()
+    {
+        return selectedEquipment;
+    }
+
+
+    public void setSelectedChassis(Hardware chassis)
+    {
+        selectedChassis = chassis;
+    }
+    public void setSelectedLocomotion(Hardware locomotion)
+    {
+        selectedLocomotion = locomotion;
+    }
+    public void setSelectedEquipment(Hardware equipment)
+    {
+        selectedEquipment = equipment;
     }
 }

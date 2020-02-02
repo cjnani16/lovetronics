@@ -9,20 +9,31 @@ public class HardwarePanelController : MonoBehaviour
     public GameObject hardwareRowPrefab;
     public List<Hardware> options;
 
+    private List<HardwareRowController> rows;
+
     void Start()
     {
         List<Hardware> allHardware = GameManager.manager.getHardware();
+        rows = new List<HardwareRowController>();
         options = allHardware.Where(h => h.getCategory() == category).ToList();
         for (int i = 0; i < options.Count; i++)
         {
             GameObject row = Instantiate(hardwareRowPrefab, new Vector3(562, 750 - i * 320, 0), Quaternion.identity);
-            row.transform.parent = transform;
-            row.GetComponent<HardwareRowController>().hardware = options[i];
+            row.transform.SetParent(transform);
+            HardwareRowController rowController = row.GetComponent<HardwareRowController>();
+            rowController.hardware = options[i];
+            rowController.controller = this;
+            rows.Add(rowController);
         }
     }
 
-    private Hardware getSelectedHardware()
+    public void updateSelectedStates()
     {
-        return GameManager.manager.getSelectedHardware();
+        for (int i = 0; i < rows.Count; i++)
+        {
+            rows[i].setBackgroundColor();
+        }
     }
+
+
 }
