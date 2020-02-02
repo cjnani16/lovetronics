@@ -328,7 +328,12 @@ public class BattleManager : MonoBehaviour
         Sprite defaultSprite = PlayerBotImage.GetComponent<Image>().sprite;
         Sprite loadedSprite = GameManager.manager.getSprite();
         PlayerBotImage.GetComponent<Image>().sprite = (loadedSprite == null)? defaultSprite : loadedSprite;
+        float prevHeight = PlayerBotImage.GetComponent<RectTransform>().sizeDelta.y;
+
         PlayerBotImage.GetComponent<RectTransform>().sizeDelta = PlayerBotImage.GetComponent<Image>().sprite.rect.size;
+        float moveDownAmt = prevHeight-PlayerBotImage.GetComponent<RectTransform>().sizeDelta.y;
+
+        PlayerBotImage.transform.parent.position -= new Vector3(0,moveDownAmt/2);
 
         CreateBuffDebuffs();
         InitHealthCoolantUI();
@@ -390,7 +395,8 @@ public class BattleManager : MonoBehaviour
                 t+=Time.deltaTime;
                 if (t>2) {
                     int i = Random.Range(0, EnemyState.hardware.Count);
-                    GameManager.manager.setDroppedPart(EnemyState.hardware[i]);
+                    GameManager.manager.setDroppedPart(EnemyState.hardware[i].rollSimilar());
+                    GameManager.manager.gainHardware(GameManager.manager.getDroppedPart());
                     SceneManager.LoadScene("WinBattleScene"); 
                 }
                 break;

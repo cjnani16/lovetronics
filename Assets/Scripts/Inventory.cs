@@ -20,9 +20,9 @@ public class Inventory
 
         // Chassis
         chassis = new List<Hardware>();
-        Hardware c1 = new Hardware(1, "Bulky", Hardware.Category.CHASSIS, new PlayerStats(0, 20, 20, 0, 0), "");
+        Hardware c1 = new Hardware(1, "Bulky", Hardware.Category.CHASSIS, new PlayerStats(0, 20, 20, 0, 0), "c2_test");
         Hardware c2 = new Hardware(2, "Focused", Hardware.Category.CHASSIS, new PlayerStats(10, 10, 0, 20, 10), "c2_test");
-        Hardware c3 = new Hardware(3, "Humanoid", Hardware.Category.CHASSIS, new PlayerStats(20, 0, 10, 10, 5), "");
+        Hardware c3 = new Hardware(3, "Humanoid", Hardware.Category.CHASSIS, new PlayerStats(20, 0, 10, 10, 5), "c2_test");
 
         chassis.Add(c1);
         chassis.Add(c2);
@@ -31,10 +31,10 @@ public class Inventory
 
         // Locomotion
         locomotion = new List<Hardware>();
-        Hardware l1 = new Hardware(1, "Spider", Hardware.Category.LOCOMOTION, new PlayerStats(10, 10, 10, 10, 10), "");
-        Hardware l2 = new Hardware(2, "Wheel", Hardware.Category.LOCOMOTION, new PlayerStats(0, 20, 20, 10, 0), "");
+        Hardware l1 = new Hardware(1, "Spider", Hardware.Category.LOCOMOTION, new PlayerStats(10, 10, 10, 10, 10), "l3_test");
+        Hardware l2 = new Hardware(2, "Wheel", Hardware.Category.LOCOMOTION, new PlayerStats(0, 20, 20, 10, 0), "l3_test");
         Hardware l3 = new Hardware(3, "Chicken", Hardware.Category.LOCOMOTION, new PlayerStats(30, 0, 0, 10, 10), "l3_test");
-        Hardware l4 = new Hardware(4, "Legs", Hardware.Category.LOCOMOTION, new PlayerStats(0, 10, 0, 30, 20), "");
+        Hardware l4 = new Hardware(4, "Legs", Hardware.Category.LOCOMOTION, new PlayerStats(0, 10, 0, 30, 20), "l3_test");
 
         locomotion.Add(l1);
         locomotion.Add(l2);
@@ -43,9 +43,9 @@ public class Inventory
 
         // Equipment
         equipment = new List<Hardware>();
-        Hardware e1 = new Hardware(1, "Slash", Hardware.Category.EQUIPMENT, new PlayerStats(20, 20, 0, 0, 20), "");
+        Hardware e1 = new Hardware(1, "Slash", Hardware.Category.EQUIPMENT, new PlayerStats(20, 20, 0, 0, 20), "e2_test");
         Hardware e2 = new Hardware(2, "Pew", Hardware.Category.EQUIPMENT, new PlayerStats(30, 0, 0, 30, 0), "e2_test");
-        Hardware e3 = new Hardware(3, "Pow", Hardware.Category.EQUIPMENT, new PlayerStats(10, 20, 10, 10, 10), "");
+        Hardware e3 = new Hardware(3, "Pow", Hardware.Category.EQUIPMENT, new PlayerStats(10, 20, 10, 10, 10), "e2_test");
 
         equipment.Add(e1);
         equipment.Add(e2);

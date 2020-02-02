@@ -131,6 +131,10 @@ public class GameManager : MonoBehaviour
         baseStats = calculateBaseStats();
     }
 
+    public void gainHardware(Hardware hw) {
+        hardware.Add(hw);
+    }
+
     public Sprite getSprite()
     {
         int chassisID = getSelectedChassis().id;

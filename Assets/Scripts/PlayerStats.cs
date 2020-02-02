@@ -50,4 +50,14 @@ public class PlayerStats
         );
     }
 
+    public static PlayerStats operator *(PlayerStats a, float b) {
+        return new PlayerStats(
+            Mathf.RoundToInt(a.getAttack()*b), 
+            Mathf.RoundToInt(a.getDefense()*b),
+            Mathf.RoundToInt(a.getMaxHealth()*b),
+            Mathf.RoundToInt(a.getMaxCoolant()*b),
+            Mathf.RoundToInt(a.getCoolantRegen()*b)
+        );
+    }
+
 }
