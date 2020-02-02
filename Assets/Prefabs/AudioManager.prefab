@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &9056694336047883886
+--- !u!1 &5092071341613666463
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 9056694336047883872}
-  - component: {fileID: 9056694336047883873}
+  - component: {fileID: 5092071341613666449}
+  - component: {fileID: 5092071341613666448}
   m_Layer: 0
-  m_Name: AudioManager
+  m_Name: AudioManager 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &9056694336047883872
+--- !u!4 &5092071341613666449
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9056694336047883886}
+  m_GameObject: {fileID: 5092071341613666463}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1453.8741, y: 1068.1489, z: -96026.81}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,13 +31,13 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9056694336047883873
+--- !u!114 &5092071341613666448
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9056694336047883886}
+  m_GameObject: {fileID: 5092071341613666463}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dbbdb5549943a4d08844f205974c05d0, type: 3}
@@ -59,4 +59,68 @@ MonoBehaviour:
     pitch: 1
     pitchVariance: 0
     loop: 0
+    source: {fileID: 0}
+  - name: gun1
+    clip: {fileID: 8300000, guid: 20b9e7b96da264f85a2a6beb501c1bcb, type: 3}
+    volume: 1
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 0
+    source: {fileID: 0}
+  - name: gun2
+    clip: {fileID: 8300000, guid: fde199762cef24dd291a746945c805ec, type: 3}
+    volume: 1
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 0
+    source: {fileID: 0}
+  - name: gun3
+    clip: {fileID: 8300000, guid: 2d826bb3467e848de89f54604f3e53ce, type: 3}
+    volume: 1
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 0
+    source: {fileID: 0}
+  - name: sword1
+    clip: {fileID: 8300000, guid: 97ae3bd171ad0442eb2cfb34c280aaf6, type: 3}
+    volume: 1
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 0
+    source: {fileID: 0}
+  - name: sword2
+    clip: {fileID: 8300000, guid: f6d873e9335cf41f2889787e0b96bfa0, type: 3}
+    volume: 1
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 0
+    source: {fileID: 0}
+  - name: thud1
+    clip: {fileID: 8300000, guid: 4cd80dab760304550a801be55b5d0350, type: 3}
+    volume: 1
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 0
+    source: {fileID: 0}
+  - name: thud2
+    clip: {fileID: 8300000, guid: b96d095c376eb4eb994f029a3b05c8e2, type: 3}
+    volume: 1
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 0
+    source: {fileID: 0}
+  - name: siren
+    clip: {fileID: 8300000, guid: 9cc9ded3daccd46fca97b7febbb8302e, type: 3}
+    volume: 0.5
+    volumeVariance: 0
+    pitch: 1
+    pitchVariance: 0
+    loop: 1
     source: {fileID: 0}

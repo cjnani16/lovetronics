@@ -26,8 +26,8 @@ public class Inventory
         bulk2.AddEffect(DPE);
 
         // Focused - Chassis
-        Ability focused1 = new Ability("Mah Lazer", "I'mma firin' it", 0.8f, 75, "pew");
-        Ability focused2 = new Ability("Scan", "Searching...", 0.0f, 10, "pew");
+        Ability focused1 = new Ability("Mah Lazer", "I'mma firin' it", 0.8f, 75, "gun");
+        Ability focused2 = new Ability("Scan", "Searching...", 0.0f, 10, "gun");
         BuffDebuff f2e = new BuffDebuff("ATK Up", new PlayerStats(10, 0, 0, 0, 0), 3);
         focused2.AddEffect(f2e);
         Ability focused3 = new Ability("System Optimization", "Running at 100%", 0.0f, 40, "thud");
