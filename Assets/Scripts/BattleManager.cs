@@ -11,7 +11,10 @@ public class BattlerState {
     public PlayerStats stats;
 
     public List<BuffDebuff> buffsAndDebuffs;
-    public BattlerState(PlayerStats s) {
+    public List<Hardware> hardware;
+
+    public BattlerState(PlayerStats s, List<Hardware> hw) {
+        hardware = hw;
         buffsAndDebuffs = new List<BuffDebuff>();
         stats = s;
         health = stats.getMaxHealth();
@@ -40,6 +43,14 @@ public class BattlerState {
             b.decrement();
         }
         buffsAndDebuffs.RemoveAll(isExpired);
+    }
+
+    public List<Ability> getAllAbilities() {
+        List<Ability> list = new List<Ability>();
+        foreach (Hardware hw in hardware) {
+            list.AddRange(hw.abilities);
+        }
+        return list;
     }
 }
 
@@ -150,8 +161,7 @@ public class BattleManager : MonoBehaviour
     }
     
     List<Ability> DrawMoves() {
-        List<Ability> movePool = GameManager.manager.getAllAbilities();
-        //TODO: get these from hardware
+        List<Ability> movePool = PlayerState.getAllAbilities();
         List<Ability> drawnMoves = new List<Ability>();
 
         while (drawnMoves.Count < 3) {
@@ -164,18 +174,16 @@ public class BattleManager : MonoBehaviour
     }
 
     List<Ability> EnemyDrawMoves() {
-        //TODO: gt these from hardware
-        List<Ability> generatedMoves = new List<Ability>();
+        List<Ability> movePool = EnemyState.getAllAbilities();
+        List<Ability> drawnMoves = new List<Ability>();
 
-        //add a couple random placeholder moves for now
-        for (int i = 0; i <3; i++) {
-            Ability thisMove = new Ability("Random Enemy Move"+i, "really mess you tf up!!! "+i, Random.Range(0.0f,1.0f), Random.Range(4,50));
-            thisMove.AddEffect("Random Defense Boost", new PlayerStats(0,10,0,0,0), 2);
-            generatedMoves.Add(thisMove);
-
+        while (drawnMoves.Count < 3) {
+            int index = Random.Range(0, movePool.Count);
+            drawnMoves.Add(movePool[index]);
+            movePool.RemoveAt(index);
         }
 
-        return generatedMoves;
+        return drawnMoves;
     }
 
     void EnemyTurnAnnounce() {
@@ -291,6 +299,20 @@ public class BattleManager : MonoBehaviour
             currentBattleState = BattleState.Win;
         }
     }
+
+    void AssembleAnEnemy() {
+        int i = Random.Range(0,3);
+        Hardware enemy_chassis = GameManager.manager.GetInventory().getAllHardwareOfCategory(Hardware.Category.CHASSIS)[i];
+        Hardware enemy_locomotion = GameManager.manager.GetInventory().getAllHardwareOfCategory(Hardware.Category.LOCOMOTION)[i];
+        Hardware enemy_equipment = GameManager.manager.GetInventory().getAllHardwareOfCategory(Hardware.Category.EQUIPMENT)[i];
+
+        List<Hardware> hwList = new List<Hardware>();
+        hwList.Add(enemy_chassis);
+        hwList.Add(enemy_equipment);
+        hwList.Add(enemy_locomotion);
+
+        EnemyState = new BattlerState(new PlayerStats(66,66,66,66,66), hwList);
+    }
     
     // Start is called before the first frame update
     void Start()
@@ -298,8 +320,9 @@ public class BattleManager : MonoBehaviour
         currentBattleState = BattleState.Start;
 
         //init health and coolant
-        PlayerState = new BattlerState(GameManager.manager.getBaseStats());
-        EnemyState = new BattlerState(new PlayerStats(66,66,66,66,66));
+        PlayerState = new BattlerState(GameManager.manager.getBaseStats(),GameManager.manager.getHardware());
+
+        AssembleAnEnemy();
 
         //set appropriate sprite
         Sprite defaultSprite = PlayerBotImage.GetComponent<Image>().sprite;

@@ -123,14 +123,6 @@ public class GameManager : MonoBehaviour
         baseStats = calculateBaseStats();
     }
 
-    public List<Ability> getAllAbilities() {
-        List<Ability> list = new List<Ability>();
-        foreach (Hardware hw in hardware) {
-            list.AddRange(hw.abilities);
-        }
-        return list;
-    }
-
     public Sprite getSprite()
     {
         int chassisID = getSelectedChassis().id;
@@ -140,4 +132,7 @@ public class GameManager : MonoBehaviour
         return Resources.Load<Sprite>("c" + chassisID + "_e" + equipmentID + "_l" + locomotionID + "_test");
     }
 
+    public Inventory GetInventory() {
+        return inventory;
+    }
 }
