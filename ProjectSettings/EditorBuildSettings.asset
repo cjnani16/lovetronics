@@ -15,15 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/CustomizationScene.unity
     guid: 2e269085a1cf74ed4b36059c2a43a045
   - enabled: 1
-    path: Assets/Scenes/LoseBattleScene.unity
-    guid: 95dde1350f2a44d8b988108d0637b38e
-  - enabled: 1
-    path: Assets/Scenes/WinBattleScene.unity
-    guid: c77351e06c4034b9dae768ffd52027fb
-  - enabled: 1
-    path: Assets/Scenes/BattleScene.unity
-    guid: b73d790fadfe141299b801a54ffadbe6
-  - enabled: 1
     path: Assets/Scenes/BattleScene.unity
     guid: b73d790fadfe141299b801a54ffadbe6
   - enabled: 1
