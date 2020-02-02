@@ -50,8 +50,13 @@ public class BattlerState
             b.decrement();
 
             //take damage/heal from effects
-            if (b.isHealBleed) {
+            if (b.type == BuffDebuffType.Health) {
                 health += b.healBleedAmt;
+            }
+
+            //take coolant damage/heal from effects
+            if (b.type == BuffDebuffType.Coolant) {
+                coolant += b.healBleedAmt;
             }
 
         }

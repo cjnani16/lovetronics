@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BuffDebuffType { Stats, Health, Coolant};
+
 public class BuffDebuff
 {
-    public bool isHealBleed;
+    public BuffDebuffType type;
     public float healBleedAmt;
     public string name;
     private PlayerStats statChanges;
@@ -14,15 +16,15 @@ public class BuffDebuff
         this.name = n;
         this.statChanges = s;
         this.duration = d;
-        this.isHealBleed=false;
+        this.type=BuffDebuffType.Stats;
     }
 
-    //heal or bleed (dot or instant)
-    public BuffDebuff(string n, float amount, int d) {
+    //heal or bleed (dot or instant) for EITHER coolant or health
+    public BuffDebuff(BuffDebuffType t, string n, float amount, int d) {
         this.name = n;
         this.statChanges = new PlayerStats(0,0,0,0,0);
         this.healBleedAmt = amount;
-        this.isHealBleed=true;
+        this.type=t;
         this.duration = d;
     }
 
