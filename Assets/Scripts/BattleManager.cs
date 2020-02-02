@@ -151,11 +151,31 @@ public class BattleManager : MonoBehaviour
         //player b/ds
         PlayerStats totalChanges = new PlayerStats(0, 0, 0, 0, 0);
         float healthDeb=0, coolDeb=0;
+
         for (int i = 0; i < PlayerState.buffsAndDebuffs.Count; i++)
         {
             totalChanges += PlayerState.buffsAndDebuffs[i].GetStatChanges();
+
+            if (PlayerState.buffsAndDebuffs[i].type == BuffDebuffType.Health) {
+                healthDeb+=PlayerState.buffsAndDebuffs[i].healBleedAmt;
+            }
+            if (PlayerState.buffsAndDebuffs[i].type == BuffDebuffType.Coolant) {
+                coolDeb+=PlayerState.buffsAndDebuffs[i].healBleedAmt;
+            }
         }
         playerBuffsAndDebuffsText.GetComponent<Text>().text = totalChanges.stringify();
+
+        if (coolDeb>0) {
+            playerBuffsAndDebuffsText.GetComponent<Text>().text += "Heal "+coolDeb+" ";
+        }else if (coolDeb<0) {
+            playerBuffsAndDebuffsText.GetComponent<Text>().text += "Bleed "+coolDeb+" ";
+        }
+
+        if (coolDeb>0) {
+            playerBuffsAndDebuffsText.GetComponent<Text>().text += "Cool "+coolDeb+" ";
+        }else if (coolDeb<0) {
+            playerBuffsAndDebuffsText.GetComponent<Text>().text += "Burn "+coolDeb+" ";
+        }
 
 
         //enemy b/ds

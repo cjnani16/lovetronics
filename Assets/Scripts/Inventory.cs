@@ -20,7 +20,9 @@ public class Inventory
         // Bulk - Chassis
         // Heal
         Ability bulk1 = new Ability("Body Slam", "Splat", 0.6f, 60, "thud");
-        // Take 30 damage
+        // Take 30 damage DONE
+        bulk1.AddEffect(new BuffDebuff(BuffDebuffType.Health,"SelfDmg",-30,1));
+
         Ability bulk2 = new Ability("Defense Protocol", "Shields online", 0.0f, 10, "thud");
         BuffDebuff DPE = new BuffDebuff("DEF Up", new PlayerStats(0, 10, 0, 0, 0), 4);
         bulk2.AddEffect(DPE);
@@ -38,58 +40,81 @@ public class Inventory
         Ability humanoid1 = new Ability("Attack Protocol", "Safety protocol disengaged", 0.2f, 30, "sword");
         BuffDebuff h1e = new BuffDebuff("ATK Up", new PlayerStats(10, 0, 0, 0, 0), 3);
         humanoid1.AddEffect(h1e);
-        // Ability humanoid2 = new Ability("Loose Wires", "It wasn't supposed to do that", 0.0f, 0, "sword");
-        // take 20 damage, gain 20 coolant
+
+        Ability humanoid2 = new Ability("Loose Wires", "It wasn't supposed to do that", 0.0f, 0, "sword");
+        // take 20 damage, gain 20 coolant DONE
+        BuffDebuff h2e = new BuffDebuff(BuffDebuffType.Health,"SelfDmg", -20, 1);
+        humanoid1.AddEffect(h2e);
+        BuffDebuff h2e2 = new BuffDebuff(BuffDebuffType.Coolant,"Cooldown", 20, 1);
+        humanoid1.AddEffect(h2e2);
+
         Ability humanoid3 = new Ability("Acid Spray", "Sizzle", 0.0f, 5, "sword");
-        // lower enemy def by 5 for 3 turns
+        // lower enemy def by 5 for 3 turns DONE
+        humanoid3.AddEnemyEffect(new BuffDebuff("Acid",new PlayerStats(0,-5,0,0,0),3));
 
         // Chicken - Locomotion
         Ability chicken1 = new Ability("Falcon Dive", "Strike from the heavens", 0.2f, 35, "sword");
         // Decrease enemy coolant
-        // BuffDebuff c1e = new BuffDebuff("Defense Up", new PlayerStats(0, 10, 0, 0, 0), 4);
-        // bulk2.chicken1(c1e);
+        BuffDebuff c1e = new BuffDebuff(BuffDebuffType.Coolant, "Burn",-10,1);
+        chicken1.AddEnemyEffect(c1e);
 
         // Legs - Locomotion
         Ability legs1 = new Ability("Jump Kick", "HIYAHH", 0.3f, 25, "thud");
         BuffDebuff l1e = new BuffDebuff("ATK Up", new PlayerStats(10, 0, 0, 0, 0), 3);
-        legs1.AddEffect(l1e); // Take 10 damage
+        legs1.AddEffect(l1e);
+        BuffDebuff l12 = new BuffDebuff(BuffDebuffType.Health, "SelfDmg", -10,1);
+        legs1.AddEffect(l12);
+
         Ability legs2 = new Ability("Roundhouse", "The world destroying kick", 0.1f, 35, "thud");
         BuffDebuff l2e = new BuffDebuff("RGN Up", new PlayerStats(0, 0, 0, 0, 20), 2);
         legs2.AddEffect(l2e);
         Ability legs3 = new Ability("Flying Knee", "Take that", 0.3f, 20, "thud");
         // Take 5 damage
+        BuffDebuff l13 = new BuffDebuff(BuffDebuffType.Health, "SelfDmg", -10,1);
+        legs3.AddEffect(l13);
 
         // Spider - Locomotion
         Ability spider1 = new Ability("Evasive Maneuvers", "Dodge and weave", 0.0f, 5, "sword");
         BuffDebuff s1e = new BuffDebuff("DEF Up", new PlayerStats(0, 15, 0, 0, 0), 2);
         spider1.AddEffect(s1e);
+
+
         // heals, decrease enemy coolant
 
         // Wheel - Locomotion
         Ability wheel1 = new Ability("Smash and Grab", "Bang 'n snatch", 0.2f, 50, "thud");
-        // enemey -10 cool, you +10 cool
+        BuffDebuff w1e = new BuffDebuff(BuffDebuffType.Coolant, "Burn",-10,1);
+        wheel1.AddEnemyEffect(w1e);
+        BuffDebuff w1e2 = new BuffDebuff(BuffDebuffType.Coolant, "Cool",10,1);
+        wheel1.AddEffect(w1e2);
+
         Ability wheel2 = new Ability("Ooze Tar", "Blub blub", 0.3f, 15, "thud");
         // deal damage to enemy
+        BuffDebuff w2e = new BuffDebuff(BuffDebuffType.Health,"Poison", -10, 3);
+        wheel2.AddEnemyEffect(w2e);
+
         Ability wheel3 = new Ability("Overclock Assault", "Fully engaged", 0.4f, 30, "thud");
         BuffDebuff w13 = new BuffDebuff("ATK Up", new PlayerStats(10, 0, 0, 0, 0), 2);
         wheel3.AddEffect(w13);
+        BuffDebuff w3e = new BuffDebuff(BuffDebuffType.Health,"SelfDmg", -20, 1);
+        wheel3.AddEffect(w3e);
         // take 20 damage
-
-
-
-
 
 
         // Pew - Equipment
         Ability pew1 = new Ability("Rapid Fire", "Pew Pew Pew Pew", 0.2f, 5, "gun");
         Ability pew2 = new Ability("High Explosive Shell", "Kaboom", 0.4f, 75, "gun");
         // Take 30 damage
+        BuffDebuff pew2e = new BuffDebuff(BuffDebuffType.Health,"SelfDmg", -30, 1);
+        pew2.AddEffect(pew2e);
         Ability pew3 = new Ability("Decoy Flare", "Can't touch this", 0.0f, 5, "gun");
         // Decrease enemy atk by 10 for 2 turns
 
 
         // Pow - Equipment
         Ability pow1 = new Ability("Smash", "Smashy smashy", 0.3f, 15, "thud");
+        BuffDebuff pow1e = new BuffDebuff(BuffDebuffType.Health,"SelfDmg", -5, 1);
+        humanoid1.AddEffect(pow1e);
         // Take 5 damage
         Ability pow2 = new Ability("Rapid Strike", "Smashy smashy", 0.45f, 40, "thud");
         // heals
@@ -103,12 +128,6 @@ public class Inventory
         Ability slash2 = new Ability("Chop Chop", "Slice 'em and Dice 'em", 0.4f, 25, "sword");
         Ability slash3 = new Ability("Target Wounds", "Aim for the knee", 0.2f, 20, "sword");
         // Lower enemy defense by 10 for 3 turns
-
-
-
-
-
-
 
 
         // Chassis
