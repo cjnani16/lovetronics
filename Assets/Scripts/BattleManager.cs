@@ -26,10 +26,10 @@ class MoveListener {
     }
 
     public void Activate(ref BattlerState user, ref BattlerState target) {
-        Debug.Log("using move: "+move.name);
+        Debug.Log("using move: "+move.name +"to deal "+move.damageCalc(ref user, ref target));
         //do things with target and user
         user.coolant -= move.cost;
-        target.health -= move.power;
+        target.health -= move.damageCalc(ref user, ref target);
         if (target.health<0) target.health=0;
         if (user.coolant<0) user.coolant=0;
     }
@@ -37,14 +37,18 @@ class MoveListener {
 
 struct BattleMove {
     public string name, description;
-    public int power, cost;
+    public float power, cost;
     public Color color;
-    public BattleMove(string name, string description, int power, int cost) {
+    public BattleMove(string name, string description, float power, float cost) {
         this.name = name;
         this.description = description;
         this.power = power;
         this.cost = cost;
         this.color = Random.ColorHSV();
+    }
+
+    public float damageCalc(ref BattlerState user, ref BattlerState target) {
+        return Mathf.Round(this.power*user.stats.getAttack()*(100f/(target.stats.getDefense()+100f)));
     }
 }
 
@@ -98,7 +102,7 @@ public class BattleManager : MonoBehaviour
 
         //add a couple random placeholder moves for now
         for (int i = 0; i <3; i++) {
-            generatedMoves.Add(new BattleMove("Random Move"+i, "random description "+i, Random.Range(10,50), Random.Range(4,50)));
+            generatedMoves.Add(new BattleMove("Random Move"+i, "random description "+i, Random.Range(0.0f,1.0f), Random.Range(4,50)));
         }
 
         return generatedMoves;
@@ -109,7 +113,7 @@ public class BattleManager : MonoBehaviour
 
         //add a couple random placeholder moves for now
         for (int i = 0; i <3; i++) {
-            generatedMoves.Add(new BattleMove("Random Enemy Move"+i, "really mess you tf up!!! "+i, Random.Range(10,50), Random.Range(4,50)));
+            generatedMoves.Add(new BattleMove("Random Enemy Move"+i, "really mess you tf up!!! "+i, Random.Range(0.0f,1.0f), Random.Range(4,50)));
         }
 
         return generatedMoves;
@@ -126,7 +130,7 @@ public class BattleManager : MonoBehaviour
         //Set fields
         enemyChosenMove.transform.Find("NameText").GetComponent<Text>().text = chosenMove.name;
         enemyChosenMove.transform.Find("DescriptionText").GetComponent<Text>().text = chosenMove.description;
-        enemyChosenMove.transform.Find("PowerText").GetComponent<Text>().text = ""+chosenMove.power;
+        enemyChosenMove.transform.Find("PowerText").GetComponent<Text>().text = ""+chosenMove.damageCalc(ref EnemyState, ref PlayerState);
         enemyChosenMove.transform.Find("CoolantText").GetComponent<Text>().text = "("+chosenMove.cost+")";
 
         MoveListener m = new MoveListener(chosenMove);
@@ -173,7 +177,7 @@ public class BattleManager : MonoBehaviour
             //Set fields
             thisMove.transform.Find("NameText").GetComponent<Text>().text = availableMoves[i].name;
             thisMove.transform.Find("DescriptionText").GetComponent<Text>().text = availableMoves[i].description;
-            thisMove.transform.Find("PowerText").GetComponent<Text>().text = ""+availableMoves[i].power;
+            thisMove.transform.Find("PowerText").GetComponent<Text>().text = ""+availableMoves[i].damageCalc(ref PlayerState, ref EnemyState);
             thisMove.transform.Find("CoolantText").GetComponent<Text>().text = "("+availableMoves[i].cost+")";
 
             MoveListener m = new MoveListener(availableMoves[i]);
@@ -232,6 +236,7 @@ public class BattleManager : MonoBehaviour
         //init health and coolant
         PlayerState = new BattlerState(GameManager.manager.getBaseStats());
         EnemyState = new BattlerState(new PlayerStats(66,66,66,66,66));
+        Debug.Log("Player attack is :"+PlayerState.stats.getAttack());
         InitHealthCoolantUI();
 
         moveListPanels = new List<GameObject>();
@@ -272,6 +277,10 @@ public class BattleManager : MonoBehaviour
                     EnemyCardDestroy();
                     CheckWinLossState();
                     if (currentBattleState!=BattleState.Loss) PresentMoves();
+
+                    //regen and other end of turn effects
+                    PlayerState.ApplyTurnEndEffects();
+                    EnemyState.ApplyTurnEndEffects();
                     riseSpeed=400;
                 }
             } break;
