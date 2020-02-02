@@ -20,6 +20,9 @@ public class HardwareRowController : MonoBehaviour
         + "\nCOOL: " + getStringFromInt(stats.getMaxCoolant())
         + "\nRGN: " + getStringFromInt(stats.getCoolantRegen());
 
+        Image img = transform.Find("Image").gameObject.GetComponent<Image>();
+        img.sprite = hardware.sprite;
+
         setBackgroundColor();
     }
 
