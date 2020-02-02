@@ -46,6 +46,11 @@ public struct Ability
         this.description+= ("\n"+statChange.stringify());
     }
 
+    public void AddEffect(BuffDebuff e) {
+        this.appliedEffects.Add(e);
+        this.description+= ("\n"+e.GetStatChanges().stringify());
+    }
+
     //for something more complex than a stat buff/debuff
     public void ApplyOnCastSpecialEffect(ref BattlerState user, ref BattlerState target) {
         return;
