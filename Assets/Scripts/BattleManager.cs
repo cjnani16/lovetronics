@@ -150,6 +150,7 @@ public class BattleManager : MonoBehaviour
     {
         //player b/ds
         PlayerStats totalChanges = new PlayerStats(0, 0, 0, 0, 0);
+        float healthDeb=0, coolDeb=0;
         for (int i = 0; i < PlayerState.buffsAndDebuffs.Count; i++)
         {
             totalChanges += PlayerState.buffsAndDebuffs[i].GetStatChanges();
