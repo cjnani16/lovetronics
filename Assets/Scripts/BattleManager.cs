@@ -41,6 +41,12 @@ public class BattlerState {
         //decrement timers on buffs/debuffs and remove expired ones
         foreach(BuffDebuff b in buffsAndDebuffs) {
             b.decrement();
+
+            //take damage/heal from effects
+            if (b.isHealBleed) {
+                health += b.healBleedAmt;
+            }
+
         }
         buffsAndDebuffs.RemoveAll(isExpired);
     }
@@ -72,6 +78,11 @@ class MoveListener {
         //place buffs and debuffs onto the user
         foreach(BuffDebuff b in move.appliedEffects) {
             user.buffsAndDebuffs.Add(b);
+        }
+
+        //place buffs and debuffs onto the target
+        foreach(BuffDebuff b in move.enemyAppliedEffects) {
+            target.buffsAndDebuffs.Add(b);
         }
     }
 }
