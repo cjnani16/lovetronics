@@ -345,6 +345,12 @@ public class BattleManager : MonoBehaviour
                 thisMove.transform.Find("DescriptionText").GetComponent<Text>().text += b.name;
             }
 
+            //Add enemy efffects to description
+            foreach (BuffDebuff b in availableMoves[i].enemyAppliedEffects)
+            {
+                thisMove.transform.Find("DescriptionText").GetComponent<Text>().text += "Enemy "+b.name;
+            }
+
             MoveListener m = new MoveListener(availableMoves[i]);
 
             //mana check
